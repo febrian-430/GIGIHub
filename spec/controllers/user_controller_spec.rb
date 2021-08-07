@@ -112,5 +112,18 @@ describe UserController do
                 expect(response[:status]).to eq(404)
             end
         end
+
+        context "when given username exists" do
+            it "returns 200 and the user data" do
+                @user_dbl = double
+                allow(User).to receive(:by_username).and_return(@user_dbl)
+
+                response = UserController.show_by_username({})
+
+                expect(response[:status]).to eq(200)
+                expect(response[:body]).not_to eq(nil)
+
+            end
+        end
     end
 end

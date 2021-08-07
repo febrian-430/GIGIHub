@@ -56,5 +56,12 @@ class UserController
         return {
             :status => 404
         } unless user
+
+        return {
+            :status => 200,
+            :body => {
+                :user => user
+            }
+        }
     end
 end
