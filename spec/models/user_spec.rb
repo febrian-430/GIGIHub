@@ -90,4 +90,23 @@ describe User do
             end
         end
     end
+
+    describe "fetches data" do
+        before(:each) do
+            @mock_db = double
+            allow(MySQLDB).to receive(:client).and_return(@mock_db)
+        end
+
+        describe "#by_username" do
+            context "username doesn't exist in the database" do
+                it "should return nil" do
+                    mock_result = double
+                    allow(@mock_db).to receive(:query).and_return(mock_result)
+                    allow(mock_result).to receive(:each).and_return([])
+
+                    expect(User.by_username("anybody")).to eq(nil)
+                end
+            end
+        end
+    end
 end

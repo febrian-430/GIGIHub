@@ -1,3 +1,5 @@
+require './db/mysql'
+
 class User
     attr_accessor :id, :username, :email, :bio_description
     def initialize(id: nil, username: nil, email: nil, bio_description: nil)
@@ -32,5 +34,11 @@ class User
 
         MySQLDB.client.query("UPDATE users username = '#@username', email = '#@email', bio_desc = '#@bio_desccription' WHERE id = #@id")
         true
+    end
+
+    def self.by_username(username)
+        result = MySQLDB.client.query("SELECT * FROM users WHERE username = '#{username}'")
+
+        return result.each[0]
     end
 end
