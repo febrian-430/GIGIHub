@@ -74,6 +74,10 @@ describe UserController do
             end
         end
 
+
+        #test when an error occured during query
+
+
         context "when id exists and passes validation and no error occured" do
             it "returns 200 and updated user data" do
                 params = {
@@ -94,6 +98,18 @@ describe UserController do
                 response = UserController.update(params)
                 expect(response[:status]).to eq(200)
                 expect(response[:body]).not_to eq(nil)
+            end
+        end
+    end
+
+    describe "#show_by_username" do
+        context "when given username doesnt exist" do
+            it "returns 404" do
+                allow(User).to receive(:by_username).and_return(nil)
+
+                response = UserController.show_by_username({})
+
+                expect(response[:status]).to eq(404)
             end
         end
     end

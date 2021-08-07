@@ -48,6 +48,13 @@ class UserController
                 :user => user
             }
         }
+    end
 
+    def self.show_by_username(params)
+        user = User.by_username(params["username"])
+
+        return {
+            :status => 404
+        } unless user
     end
 end
