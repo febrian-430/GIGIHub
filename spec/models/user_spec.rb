@@ -80,6 +80,14 @@ describe User do
                     expect(@update_ready_user.update).to eq(true)
                 end
             end
+
+            context "when user doesn't pass the validation" do
+                it "should not call the database" do
+                    allow(@update_ready_user).to receive(:update?).and_return(false)
+                    expect(@mock_db).not_to receive(:query)
+                    expect(@update_ready_user.update).to eq(false)
+                end
+            end
         end
     end
 end
