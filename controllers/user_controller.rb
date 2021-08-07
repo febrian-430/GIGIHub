@@ -7,10 +7,13 @@ class UserController
             email: params[:email],
             bio_description: params[:bio_description]
         )
+
+        
+
         return {
-            :status => "400",
+            :status => 400,
             :message => "Request body does not meet its criteria",
             :ack => false
-        }
+        } unless user.save
     end
 end
