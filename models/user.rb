@@ -2,7 +2,7 @@ require './db/mysql'
 
 class User
     attr_accessor :id, :username, :email, :bio_description
-    def initialize(id: nil, username: nil, email: nil, bio_description: nil)
+    def initialize(id: nil, username: nil, email: nil, bio_description: nil, join_date: nil)
         @id = id
         @username = username
         @email = email
@@ -38,7 +38,16 @@ class User
 
     def self.by_username(username)
         result = MySQLDB.client.query("SELECT * FROM users WHERE username = '#{username}'")
-
-        return result.each[0]
+        row = result.each[0]
+        return nil unless row
+        
+        user = User.new(
+            id: row["id"].to_i, 
+            username: row["username"], 
+            email: row["email"],
+            bio_description: row["bio_description"],
+            join_date: row["join_date"]
+        )
+        return user
     end
 end

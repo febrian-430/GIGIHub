@@ -107,6 +107,22 @@ describe User do
                     expect(User.by_username("anybody")).to eq(nil)
                 end
             end
+
+            context "username exists in the database" do
+                it "should return user object" do
+                    mock_result = double
+                    allow(@mock_db).to receive(:query).and_return(mock_result)
+                    allow(mock_result).to receive(:each).and_return([{
+                        "id" => "1",
+                        "username" => "nobody",
+                        "email" => "nobody@nobody.com",
+                        "bio_description" => "nobody",
+                        "join_date" => "28282822"
+                    }])
+
+                    expect(User.by_username("nobody").username).to eq("nobody")
+                end
+            end
         end
     end
 end
