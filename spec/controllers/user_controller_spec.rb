@@ -73,5 +73,28 @@ describe UserController do
                 expect(response[:status]).to eq(400)
             end
         end
+
+        context "when id exists and passes validation and no error occured" do
+            it "returns 200 and updated user data" do
+                params = {
+                    "id": "6969",
+                    "username": "", 
+                    "email": "adada@daw",
+                    "bio_description": "nope"
+                }
+                allow(User).to receive(:by_id).and_return(@user_double)
+                allow(@user_double).to receive(:update?).and_return(true)
+                allow(@user_double).to receive(:username=)
+                allow(@user_double).to receive(:email=)
+                allow(@user_double).to receive(:bio_description=)
+                allow(@user_double).to receive(:update).and_return(true)
+
+
+                expect(@user_double).to receive(:update)
+                response = UserController.update(params)
+                expect(response[:status]).to eq(200)
+                expect(response[:body]).not_to eq(nil)
+            end
+        end
     end
 end
