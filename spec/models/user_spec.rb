@@ -71,5 +71,15 @@ describe User do
                 end
             end
         end
+
+        describe "#update" do
+            context "when user passes validation" do
+                it "should call the database" do
+                    allow(@update_ready_user).to receive(:update?).and_return(true)
+                    expect(@mock_db).to receive(:query)
+                    expect(@update_ready_user.update).to eq(true)
+                end
+            end
+        end
     end
 end

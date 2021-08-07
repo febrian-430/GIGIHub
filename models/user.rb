@@ -26,4 +26,11 @@ class User
         return false if @email.nil? || @email.empty?
         true
     end
+
+    def update
+        return false unless self.update?
+
+        MySQLDB.client.query("UPDATE users username = '#@username', email = '#@email', bio_desc = '#@bio_desccription' WHERE id = #@id")
+        true
+    end
 end
