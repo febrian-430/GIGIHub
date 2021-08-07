@@ -1,7 +1,8 @@
 require './db/mysql'
 
 class User
-    attr_accessor :id, :username, :email, :bio_description
+    attr_accessor :username, :email, :bio_description
+    attr_reader :id
     def initialize(id: nil, username: nil, email: nil, bio_description: nil, join_date: nil)
         @id = id
         @username = username

@@ -25,13 +25,52 @@ describe UserController do
         context "when saving the user succeeded" do
             it "returns 201, ack true, and success message" do
                 params = {
-                    username: "I can wait forever", 
-                    email: "adada@daw", 
+                    "username": "I can wait forever", 
+                    "email": "adada@daw"
                 }
                 allow(@user_double).to receive(:save).and_return(true)
 
                 response = UserController.create(params)
                 expect(response[:status]).to eq(201)
+            end
+        end
+    end
+
+    describe "#update" do
+        before(:each) do
+            @user_double = double
+        end
+        context "when id doesnt exist in the database" do
+            it "returns 404" do
+                params = {
+                    "id": "6969",
+                    "username": "I can wait forever", 
+                    "email": "adada@daw",
+                    "bio_description": "nope"
+                }
+                allow(User).to receive(:by_id).and_return(nil)
+                response = UserController.update(params)
+                expect(response[:status]).to eq(404)
+            end
+        end
+
+        context "when id exists but fails validation" do
+            it "returns 400" do
+                params = {
+                    "id": "6969",
+                    "username": "", 
+                    "email": "adada@daw",
+                    "bio_description": "nope"
+                }
+                allow(User).to receive(:by_id).and_return(@user_double)
+                allow(@user_double).to receive(:update?).and_return(false)
+                allow(@user_double).to receive(:username=)
+                allow(@user_double).to receive(:email=)
+                allow(@user_double).to receive(:bio_description=)
+
+                expect(@user_double).to receive(:update)
+                response = UserController.update(params)
+                expect(response[:status]).to eq(400)
             end
         end
     end

@@ -28,5 +28,26 @@ class UserController
     end
 
     def self.update(params)
+        user = User.by_id(params["id"].to_i)
+        
+        return {
+            :status => 404
+        } unless user
+
+        user.username = params["username"]
+        user.email = params["email"]
+        user.bio_description = params["bio_description"]
+
+        return {
+            :status => 400
+        } unless user.update
+
+        return {
+            :status => 200,
+            :body => {
+                :user => user
+            }
+        }
+
     end
 end
