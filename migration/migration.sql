@@ -14,7 +14,7 @@ create table users (
     username varchar(50) not null unique,
     email varchar(100) not null unique,
     -- password CHAR(60) BINARY not null,
-    bio_description varchar(255),
+    bio_description varchar(255) default '',
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
