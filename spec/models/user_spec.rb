@@ -125,5 +125,33 @@ describe User do
                 end
             end
         end
+
+        describe "#by_id" do
+            context "when id doesn't exist in the database" do
+                it "should return nil" do
+                    mock_result = double
+                    allow(@mock_db).to receive(:query).and_return(mock_result)
+                    allow(mock_result).to receive(:each).and_return([])
+
+                    expect(User.by_id(6969)).to eq(nil)
+                end
+            end
+
+            context "when id exists in the database" do
+                it "should return user object" do
+                    mock_result = double
+                    allow(@mock_db).to receive(:query).and_return(mock_result)
+                    allow(mock_result).to receive(:each).and_return([{
+                        "id" => "1",
+                        "username" => "nobody",
+                        "email" => "nobody@nobody.com",
+                        "bio_description" => "nobody",
+                        "join_date" => "28282822"
+                    }])
+
+                    expect(User.by_id(1).id).to eq(1)
+                end
+            end
+        end
     end
 end

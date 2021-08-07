@@ -51,4 +51,19 @@ class User
         )
         return user
     end
+
+    def self.by_id(id)
+        result = MySQLDB.client.query("SELECT * FROM users WHERE id = #{id}")
+        row = result.each[0]
+        return nil unless row
+
+        user = User.new(
+            id: row["id"].to_i, 
+            username: row["username"], 
+            email: row["email"],
+            bio_description: row["bio_description"],
+            join_date: row["join_date"]
+        )
+        return user
+    end
 end
