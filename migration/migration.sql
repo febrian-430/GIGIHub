@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS tags;
 
 
 create table users (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     username varchar(50) not null unique,
     email varchar(100) not null unique,
     -- password CHAR(60) BINARY not null,
@@ -20,8 +20,8 @@ create table users (
 );
 
 create table posts (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    user_id int references users(ID),
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id int references users(id),
     body text(1000) not null,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -29,9 +29,9 @@ create table posts (
 );
 
 create table comments (
-    ID int auto_increment primary key,
-    post_id int references posts(ID),
-    user_id int references users(ID),
+    id int auto_increment primary key,
+    post_id int references posts(id),
+    user_id int references users(id),
     body varchar(1000) not null,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -39,28 +39,28 @@ create table comments (
 );
 
 create table post_attachments (
-    ID int auto_increment primary key,
-    post_id int references posts(ID),
+    id int auto_increment primary key,
+    post_id int references posts(id),
     file_path varchar(255) not null
 );
 
 create table tags (
-    ID int auto_increment primary key,
+    id int auto_increment primary key,
     name varchar(255) not null unique,
     created_at timestamp default current_timestamp 
 );
 
 create table post_tags (
-    post_id int references posts(ID),
-    tag_id int references tags(ID),
+    post_id int references posts(id),
+    tag_id int references tags(id),
     created_at timestamp default current_timestamp,
 
     primary key(tag_id, post_id)
 );
 
 create table comment_tags (
-    comment_id int references comments(ID),
-    tag_id int references tags(ID),
+    comment_id int references comments(id),
+    tag_id int references tags(id),
     created_at timestamp default current_timestamp,
 
     primary key(tag_id, comment_id)
@@ -79,15 +79,15 @@ insert into post_tags(post_id, tag_id) values(1, 1), (1, 2), (2, 2), (3, 2);
 
 insert into comment_tags(comment_id, tag_id) values(1, 1), (2, 2);
 
-select ID, name, sum(count)
+select id, name, sum(count)
 from (
-    select t.ID, t.name, count(pt.post_id) as count
-    from tags t join post_tags pt on t.ID = pt.tag_id
-    group by t.ID
+    select t.id, t.name, count(pt.post_id) as count
+    from tags t join post_tags pt on t.id = pt.tag_id
+    group by t.id
     union all
-    select t.ID, t.name, count(ct.comment_id) as count
-    from tags t join comment_tags ct on t.ID = ct.tag_id
-    group by t.ID
+    select t.id, t.name, count(ct.comment_id) as count
+    from tags t join comment_tags ct on t.id = ct.tag_id
+    group by t.id
 ) tag_counts
-group by ID, name
+group by id, name
 order by sum(count) desc
