@@ -18,7 +18,7 @@ class User
     def save
         return false unless self.save?
         client = MySQLDB.client
-        client.query("INSERT INTO users (username, email, bio_desc) values('#@username', '#@email', '#@bio_desccription'")
+        client.query("INSERT INTO users (username, email, bio_description) values('#@username', '#@email', '#@bio_description')")
         @id = client.last_id
         true
     end

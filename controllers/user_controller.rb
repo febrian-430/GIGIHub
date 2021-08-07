@@ -1,13 +1,14 @@
+require 'json'
 require './models/user'
 
 class UserController
     def self.create(params)
         user = User.new(
-            username: params[:username],
-            email: params[:email],
-            bio_description: params[:bio_description]
+            username: params["username"],
+            email: params["email"],
+            bio_description: params["bio_description"]
         )
-        
+
         return {
             :status => 400,
             :body => {
@@ -24,5 +25,8 @@ class UserController
                 :created_user => user
             }
         }
+    end
+
+    def self.update(params)
     end
 end
