@@ -58,7 +58,8 @@ describe User do
                     allow(@mock_db).to receive(:last_id).and_return(1)
                     expect(@mock_db).to receive(:query)
                     
-                    expect(@insert_ready_user.save).to eq(1)
+                    expect(@insert_ready_user.save).to eq(true)
+                    expect(@insert_ready_user.id).to eq(1)
                 end
             end
 

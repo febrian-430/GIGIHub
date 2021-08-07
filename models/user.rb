@@ -20,6 +20,7 @@ class User
         client = MySQLDB.client
         client.query("INSERT INTO users (username, email, bio_desc) values('#@username', '#@email', '#@bio_desccription'")
         @id = client.last_id
+        true
     end
 
     def update?
@@ -40,7 +41,7 @@ class User
         result = MySQLDB.client.query("SELECT * FROM users WHERE username = '#{username}'")
         row = result.each[0]
         return nil unless row
-        
+
         user = User.new(
             id: row["id"].to_i, 
             username: row["username"], 
