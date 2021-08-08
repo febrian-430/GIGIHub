@@ -2,7 +2,8 @@ require './db/mysql'
 require './utils/JSONable'
 
 class Post < JSONable
-
+    attr_accessor :body, :created_at, :updated_at, :user_id
+    attr_reader :user, :id
     def initialize(params)
         @id = nil
         @body = params["body"]
