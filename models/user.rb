@@ -37,7 +37,7 @@ class User < JSONable
     def update
         return false unless self.update?
 
-        MySQLDB.client.query("UPDATE users username = '#@username', email = '#@email', bio_desc = '#@bio_desccription' WHERE id = #@id")
+        MySQLDB.client.query("UPDATE users SET username = '#@username', email = '#@email', bio_description = '#@bio_description' WHERE id = #@id")
         true
     end
 
