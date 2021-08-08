@@ -1,4 +1,7 @@
+require './models/post'
+
 class Tag
+
     def initialize(params)
         @id = params["id"]
         @name = params["name"]
@@ -6,9 +9,29 @@ class Tag
     end
 
     def self.insert_post_tags(post_id, raw_tags = [])
-        
+        post = Post.by_id(post_id.to_i)
+        return false unless post
+
+        link_tags_to_post!(post.id, raw_tags) unless raw_tags.empty?
+        true
     end
 
+    #private 
+    def self.link_tags_to_post!(post_id, raw_tags=[])
+        return 0 if raw_tags.empty?
+
+        bulk_insert!(raw_tags)
+        client = MySQLDB.client
+        client.query(
+            "INSERT IGNORE INTO tags(post_id, tag_id)
+            SELECT #{post_id}, id
+            # FROM tag
+            WHERE name IN (#{raw_tags.join(',')})"
+        )
+        return client.affected_rows
+    end
+
+    #private
     def self.bulk_insert!(raw_tags = [])
         return 0 if raw_tags.empty?
 
@@ -25,17 +48,5 @@ class Tag
         return client.affected_rows
     end
 
-    def self.link_tags_to_post!(post_id, raw_tags=[])
-        return 0 if raw_tags.empty?
-
-        bulk_insert!(raw_tags)
-        client = MySQLDB.client
-        client.query(
-            "INSERT IGNORE INTO tags(post_id, tag_id)
-            SELECT #{post_id}, id
-            FROM tags
-            WHERE name IN (#{raw_tags.join(',')})"
-        )
-        return client.affected_rows
-    end
+    private_class_method :bulk_insert!, :link_tags_to_post!
 end
