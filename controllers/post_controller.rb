@@ -22,4 +22,17 @@ class PostController
         }
         return response
     end
+
+    def self.show_by_id(params)
+        post = Post.by_id(params["id"].to_i)
+        return DefaultResponse.not_found unless post
+
+        response = {
+            :status => 200,
+            :body => {
+                :post => post
+            }
+        }
+        return response
+    end
 end

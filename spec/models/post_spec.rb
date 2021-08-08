@@ -1,6 +1,7 @@
 require 'rspec'
 require './models/post'
 require './models/user'
+require './models/tag'
 require './db/mysql'
 
 
@@ -59,11 +60,11 @@ describe Post do
                 end
             end
 
-            context "when passes the database validation" do
+            context "when passes the database validation with no tags" do
                 it "calls the database and returns true" do
                     post = Post.new({
                         "user_id": 1,
-                        "body" => "haha"
+                        "body" => "haha aha"
                     })
 
                     allow(post).to receive(:save?).and_return(true)
@@ -71,6 +72,24 @@ describe Post do
                     allow(MySQLDB).to receive(:client).and_return(mock_db)
                     allow(mock_db).to receive(:last_id).and_return(123)
 
+                    expect(mock_db).to receive(:query)
+                    expect(post.save).to eq(true)
+                end
+            end
+
+            context "when passes the database validation with tags" do
+                it "calls the database and returns true" do
+                    post = Post.new({
+                        "user_id": 1,
+                        "body" => "ha #ha"
+                    })
+
+                    allow(post).to receive(:save?).and_return(true)
+                    mock_db = double
+                    allow(MySQLDB).to receive(:client).and_return(mock_db)
+                    allow(mock_db).to receive(:last_id).and_return(123)
+
+                    expect(Tag).to receive(:insert_post_tags)
                     expect(mock_db).to receive(:query)
                     expect(post.save).to eq(true)
                 end
@@ -83,6 +102,31 @@ describe Post do
             @mock_db = double("mock db")
             allow(MySQLDB).to receive(:client).and_return(@mock_db)
         end
+
+        describe "#by_id_exists" do
+            context "when given id doesnt exist" do
+                it "returns false" do
+                    mock_result = double("query result")
+                    allow(@mock_db).to receive(:query).and_return(mock_result)
+                    allow(mock_result).to receive(:each).and_return([])
+
+                    expect(Post.by_id_exists(-1)).to eq(false)
+                end
+            end
+
+            context "when id exists" do
+                it "returns true" do
+                    mock_result = double("query result")
+                    allow(@mock_db).to receive(:query).and_return(mock_result)
+                    allow(mock_result).to receive(:each).and_return([{
+                        "id" => 1
+                    }])
+                        
+                    expect(Post.by_id_exists(-1)).to eq(true)
+                end
+            end
+        end
+        
         describe "#by_id" do
             context "when given id doesnt exist" do
                 it "returns nil" do

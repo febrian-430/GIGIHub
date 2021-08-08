@@ -1,8 +1,9 @@
 require './models/post'
 require './exceptions/not_found'
+require './utils/JSONable'
 
 
-class Tag
+class Tag < JSONable
     def initialize(params)
         @id = params["id"]
         @name = params["name"]
@@ -18,7 +19,7 @@ class Tag
     end
 
     def self.by_post(post_id)
-        post = Post.by_id(post_id.to_i)
+        post = Post.by_id_exists(post_id.to_i)
         raise NotFoundError unless post
 
         client = MySQLDB.client
@@ -43,12 +44,13 @@ class Tag
 
         bulk_insert!(raw_tags)
         client = MySQLDB.client
-        client.query(
-            "INSERT IGNORE INTO tags(post_id, tag_id)
-            SELECT #{post_id}, id
-            # FROM tag
-            WHERE name IN (#{raw_tags.join(',')})"
-        )
+        query = "INSERT IGNORE INTO post_tags(post_id, tag_id)
+        SELECT #{post_id}, id
+        FROM tags
+        WHERE name IN (#{raw_tags.map { |tag| "'#{tag}'" }.join(',')})"
+        puts query
+
+        client.query(query)
         return client.affected_rows
     end
 

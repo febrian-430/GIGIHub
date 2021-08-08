@@ -99,7 +99,7 @@ describe Tag do
         describe "#by_post" do
             context "when post_id doesnt exist" do
                 it "raises not found error" do
-                    allow(Post).to receive(:by_id).and_return(nil)
+                    allow(Post).to receive(:by_id_exists).and_return(false)
 
                     expect { Tag.by_post(-1) }.to raise_error(NotFoundError)
                 end
@@ -110,7 +110,7 @@ describe Tag do
                     post_dbl = double("post")
                     mock_db = double("mock db")
                     mock_result = double("mock result")
-                    allow(Post).to receive(:by_id).and_return(post_dbl)
+                    allow(Post).to receive(:by_id_exists).and_return(post_dbl)
                     allow(MySQLDB).to receive(:client).and_return(mock_db)
                     allow(mock_db).to receive(:query).and_return(mock_result)
 
