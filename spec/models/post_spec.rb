@@ -77,4 +77,22 @@ describe Post do
             end
         end
     end
+
+    describe "fetches" do
+        before(:each) do
+            @mock_db = double("mock db")
+            allow(MySQLDB).to receive(:client).and_return(@mock_db)
+        end
+        describe "#by_id" do
+            context "when given id doesnt exist" do
+                it "returns nil" do
+                    mock_result = double("query result")
+                    allow(@mock_db).to receive(:query).and_return(mock_result)
+                    allow(mock_result).to receive(:each).and_return([])
+
+                    expect(Post.by_id(-1)).to eq(nil)
+                end
+            end
+        end
+    end
 end

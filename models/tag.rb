@@ -5,6 +5,10 @@ class Tag
         @created_at = params["created_at"]
     end
 
+    def self.insert_post_tags(post_id, raw_tags = [])
+        
+    end
+
     def self.bulk_insert!(raw_tags = [])
         return 0 if raw_tags.empty?
 
@@ -23,7 +27,7 @@ class Tag
 
     def self.link_tags_to_post!(post_id, raw_tags=[])
         return 0 if raw_tags.empty?
-        
+
         bulk_insert!(raw_tags)
         client = MySQLDB.client
         client.query(
