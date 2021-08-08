@@ -30,7 +30,10 @@ class MySQLDB
             return true
         rescue => exception
             transaction_client.query("ROLLBACK")
+            raise exception
             return false
         end
     end
+
+    private_class_method :new_client
 end

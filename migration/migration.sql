@@ -73,7 +73,7 @@ insert into posts(user_id, body) values(1, 'generasi #gigih lets goooo #gobeyond
 
 insert into comments(post_id, user_id, body) values(1, 2, 'hello #gigih fellow'), (2, 1, '#gobeyond');
 
-insert into tags(name) values('#gigih'), ('#gobeyond');
+insert into tags(name) values('gigih'), ('gobeyond');
 
 insert into post_tags(post_id, tag_id) values(1, 1), (1, 2), (2, 2), (3, 2);
 
