@@ -13,4 +13,8 @@ class Parser
         end
         words
     end
+
+    def self.hashtags(str)
+        return words_begin_with('#', str)
+    end
 end
