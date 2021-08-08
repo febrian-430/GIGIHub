@@ -65,7 +65,7 @@ describe Tag do
                 it "should return false" do
                     allow(Post).to receive(:by_id).and_return(nil)
 
-                    expect(Tag.insert_post_tags(-1, [])).to eq(false)
+                    expect { Tag.insert_post_tags(-1, []) }.to raise_error(NotFoundError)
                 end
             end
 
@@ -102,6 +102,20 @@ describe Tag do
                     allow(Post).to receive(:by_id).and_return(nil)
 
                     expect { Tag.by_post(-1) }.to raise_error(NotFoundError)
+                end
+            end
+
+            context "when post_id exists" do
+                it "returns array of tags" do
+                    post_dbl = double("post")
+                    mock_db = double("mock db")
+                    mock_result = double("mock result")
+                    allow(Post).to receive(:by_id).and_return(post_dbl)
+                    allow(MySQLDB).to receive(:client).and_return(mock_db)
+                    allow(mock_db).to receive(:query).and_return(mock_result)
+
+                    expect(Tag).to receive(:bind).with(mock_result)
+                    Tag.by_post(1)
                 end
             end
         end

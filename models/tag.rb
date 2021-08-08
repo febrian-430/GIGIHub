@@ -3,7 +3,6 @@ require './exceptions/not_found'
 
 
 class Tag
-
     def initialize(params)
         @id = params["id"]
         @name = params["name"]
@@ -12,7 +11,7 @@ class Tag
 
     def self.insert_post_tags(post_id, raw_tags = [])
         post = Post.by_id(post_id.to_i)
-        return false unless post
+        raise NotFoundError unless post
 
         link_tags_to_post!(post.id, raw_tags) unless raw_tags.empty?
         true
@@ -21,6 +20,21 @@ class Tag
     def self.by_post(post_id)
         post = Post.by_id(post_id.to_i)
         raise NotFoundError unless post
+
+        client = MySQLDB.client
+        raw = client.query("SELECT t.* FROM tags t JOIN post_tags pt ON t.id = pt.tag_id 
+            WHERE post_id = #{post_id}")
+        tags = bind(raw)
+        return tags
+    end
+
+    def self.bind(raw)
+        tags = []
+        raw.each do |row| 
+            tag = Tag.new(row)
+            tags << tag
+        end
+        tags
     end
 
     #private 
@@ -55,5 +69,5 @@ class Tag
         return client.affected_rows
     end
 
-    private_class_method :bulk_insert!, :link_tags_to_post!
+    private_class_method :bulk_insert!, :link_tags_to_post!, :bind
 end
