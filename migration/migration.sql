@@ -83,11 +83,13 @@ select id, name, sum(count)
 from (
     select t.id, t.name, count(pt.post_id) as count
     from tags t join post_tags pt on t.id = pt.tag_id
+    where pt.created_at >= NOW() - INTERVAL 1 DAY
     group by t.id
     union all
     select t.id, t.name, count(ct.comment_id) as count
     from tags t join comment_tags ct on t.id = ct.tag_id
+    where ct.created_at >= NOW() - INTERVAL 1 DAY
     group by t.id
 ) tag_counts
 group by id, name
-order by sum(count) desc
+order by sum(count) desc;
