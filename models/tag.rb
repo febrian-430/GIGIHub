@@ -22,10 +22,12 @@ class Tag
     end
 
     def self.link_tags_to_post!(post_id, raw_tags=[])
+        return 0 if raw_tags.empty?
+        
         bulk_insert!(raw_tags)
         client = MySQLDB.client
         client.query(
-            "INSERT INTO tags(post_id, tag_id)
+            "INSERT IGNORE INTO tags(post_id, tag_id)
             SELECT #{post_id}, id
             FROM tags
             WHERE name IN (#{raw_tags.join(',')})"
