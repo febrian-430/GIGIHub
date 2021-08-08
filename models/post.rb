@@ -23,4 +23,13 @@ class Post < JSONable
         return false if @user.nil?
         true
     end
+
+    def save
+        return false unless self.save?
+
+        MySQLDB.client.query("INSERT INTO posts(user_id, body) values(#@user_id, '#@body')")
+        #race condition might happen here
+        @id = MySQLDB.client.last_id
+        true
+    end
 end
