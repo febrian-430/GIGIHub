@@ -32,8 +32,7 @@ describe User do
 
             context "when id is nil" do
                 it "should return false" do
-                    @update_ready_user.id = nil
-                    expect(@update_ready_user.update?).to eq(false)
+                    expect(@insert_ready_user.update?).to eq(false)
                 end
             end
 
