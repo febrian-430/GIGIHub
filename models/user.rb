@@ -1,13 +1,16 @@
 require './db/mysql'
+require './utils/JSONable'
 
-class User
+class User < JSONable
     attr_accessor :username, :email, :bio_description
     attr_reader :id
+
     def initialize(id: nil, username: nil, email: nil, bio_description: nil, join_date: nil)
         @id = id
         @username = username
         @email = email
         @bio_description = bio_description
+        @join_date = join_date
     end
 
     def save? 
