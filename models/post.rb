@@ -39,5 +39,8 @@ class Post < JSONable
         row = result.each[0]
         post = nil
         return post unless row
+
+        post = Post.new(row)
+        return post
     end
 end

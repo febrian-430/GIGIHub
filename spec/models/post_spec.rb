@@ -93,6 +93,18 @@ describe Post do
                     expect(Post.by_id(-1)).to eq(nil)
                 end
             end
+
+            context "when id exists" do
+                it "returns the post" do
+                    mock_result = double("query result")
+                    allow(@mock_db).to receive(:query).and_return(mock_result)
+                    allow(mock_result).to receive(:each).and_return([{
+                        "id" => 1
+                    }])
+                        
+                    expect(Post.by_id(-1)).not_to eq(nil)
+                end
+            end
         end
     end
 end
