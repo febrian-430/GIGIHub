@@ -1,6 +1,9 @@
 require 'rspec'
 require './models/tag'
 require './db/mysql'
+require './exceptions/not_found'
+
+
 
 describe Tag do
     describe "where collaborates with post object" do
@@ -87,6 +90,18 @@ describe Tag do
 
                     expect(Tag).to receive(:link_tags_to_post!)
                     expect(Tag.insert_post_tags(post_id, tags)).to eq(true)
+                end
+            end
+        end
+    end
+
+    describe "fetch" do
+        describe "#by_post" do
+            context "when post_id doesnt exist" do
+                it "raises not found error" do
+                    allow(Post).to receive(:by_id).and_return(nil)
+
+                    expect { Tag.by_post(-1) }.to raise_error(NotFoundError)
                 end
             end
         end

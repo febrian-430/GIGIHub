@@ -1,4 +1,6 @@
 require './models/post'
+require './exceptions/not_found'
+
 
 class Tag
 
@@ -14,6 +16,11 @@ class Tag
 
         link_tags_to_post!(post.id, raw_tags) unless raw_tags.empty?
         true
+    end
+
+    def self.by_post(post_id)
+        post = Post.by_id(post_id.to_i)
+        raise NotFoundError unless post
     end
 
     #private 
