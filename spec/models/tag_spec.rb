@@ -96,6 +96,11 @@ describe Tag do
     end
 
     describe "fetch" do
+        before(:each) do
+            @mock_db = double("mock db")
+            allow(MySQLDB).to receive(:client).and_return(@mock_db)
+        end
+
         describe "#by_post" do
             context "when post_id doesnt exist" do
                 it "raises not found error" do
@@ -108,15 +113,25 @@ describe Tag do
             context "when post_id exists" do
                 it "returns array of tags" do
                     post_dbl = double("post")
-                    mock_db = double("mock db")
                     mock_result = double("mock result")
                     allow(Post).to receive(:by_id_exists).and_return(post_dbl)
-                    allow(MySQLDB).to receive(:client).and_return(mock_db)
-                    allow(mock_db).to receive(:query).and_return(mock_result)
+                    allow(@mock_db).to receive(:query).and_return(mock_result)
 
                     expect(Tag).to receive(:bind).with(mock_result)
                     Tag.by_post(1)
                 end
+            end
+        end
+
+        describe "#top" do
+            it "returns top tags within the last 24h" do
+                mock_result = double("mock result")
+                mock_data = double("database data")
+                allow(@mock_db).to receive(:query).and_return(mock_result)
+                allow(mock_result).to receive(:each).and_return(mock_data)
+                
+                expect(Tag).to receive(:bind).with(mock_data)
+                Tag.top(5)                                                                             
             end
         end
     end

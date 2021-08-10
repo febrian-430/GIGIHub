@@ -8,6 +8,38 @@ class Tag < JSONable
         @id = params["id"]
         @name = params["name"]
         @created_at = params["created_at"]
+        @count = params["count"]
+    end
+
+    def self.top(number)
+        number = number.to_i
+        query = "SELECT id, name, SUM(count) as count
+        FROM (
+            SELECT t.id, t.name, COUNT(pt.post_id) as count
+            FROM tags t 
+            JOIN post_tags pt 
+            ON t.id = pt.tag_id
+            WHERE pt.created_at >= NOW() - INTERVAL 1 DAY
+            GROUP BY t.id
+
+            UNION ALL
+
+            SELECT t.id, t.name, COUNT(ct.comment_id) as count
+            FROM tags t 
+            JOIN comment_tags ct 
+            ON t.id = ct.tag_id
+            WHERE ct.created_at >= NOW() - INTERVAL 1 DAY
+            GROUP BY t.id
+        ) tag_counts
+        GROUP BY id, name
+        ORDER BY SUM(count) DESC
+        LIMIT #{number}"
+
+        result = MySQLDB.client.query(query)
+        raw = result.each
+        
+        tags = bind(raw)
+        tags
     end
 
     def self.insert_post_tags(post_id, raw_tags = [])
@@ -29,6 +61,7 @@ class Tag < JSONable
         return tags
     end
 
+    #private
     def self.bind(raw)
         tags = []
         raw.each do |row| 
