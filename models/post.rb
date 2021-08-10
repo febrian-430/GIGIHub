@@ -47,6 +47,24 @@ class Post < JSONable
         true
     end
 
+    def self.all
+        posts = []
+        result = MySQLDB.client.query("SELECT * FROM posts ORDER BY created_at DESC")
+        raw = result.each
+        raw.each do |row|
+            post = Post.new({
+                "id" => row["id"],
+                "body" => row["body"],
+                "created_at" => row["created_at"],
+                "updated_at" => row["updated_at"],
+                "user_id" => row["user_id"]
+            })
+            post.user = User.by_id(post.user_id)
+            posts.push post
+        end
+        return posts
+    end
+
     def self.by_id_exists(id)
         return true if find(id)
         return false

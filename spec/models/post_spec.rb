@@ -143,11 +143,38 @@ describe Post do
                     mock_result = double("query result")
                     allow(@mock_db).to receive(:query).and_return(mock_result)
                     allow(mock_result).to receive(:each).and_return([{
-                        "id" => 1
+                        "id" => "1",
+                        "body" => "123",
+                        "created_at" => "1111111",
+                        "user_id" => "1"
                     }])
                         
                     expect(Post.by_id(-1)).not_to eq(nil)
                 end
+            end
+        end
+
+        describe "#all" do
+            it "returns all posts sorted by the most recent posts" do
+                mock_result = double("query result")
+                allow(@mock_db).to receive(:query).and_return(mock_result)
+                allow(mock_result).to receive(:each).and_return([{
+                    "id" => "1",
+                    "body" => "123",
+                    "created_at" => "1111111",
+                    "user_id" => "1"
+                }, 
+                {
+                    "id" => "2",
+                    "body" => "dd",
+                    "created_at" => "555",
+                    "user_id" => "2"
+                }])
+
+                posts = Post.all 
+                # puts posts[0].inspect
+                expect(posts).not_to eq([])
+                expect(posts[0].instance_of? Post).to be_truthy
             end
         end
     end
