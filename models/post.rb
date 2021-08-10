@@ -47,9 +47,15 @@ class Post < JSONable
         true
     end
 
-    def self.all
+    def self.all(filter)
         posts = []
-        result = MySQLDB.client.query("SELECT * FROM posts ORDER BY created_at DESC")
+        result = MySQLDB.client.query(
+            "SELECT p.*
+            FROM posts p
+            JOIN (post_tags pt CROSS JOIN tags t)
+            ON (p.id = pt.post_id AND t.id = pt.tag_id)
+            WHERE (#{filter["tag"].nil? || filter["tag"].empty? } = true OR t.name = '#{filter["tag"]}')
+            ORDER BY p.created_at DESC")
         raw = result.each
         raw.each do |row|
             post = Post.new({

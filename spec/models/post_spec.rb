@@ -155,10 +155,10 @@ describe Post do
         end
 
         describe "#all" do
-            it "returns all posts sorted by the most recent posts" do
-                mock_result = double("query result")
-                allow(@mock_db).to receive(:query).and_return(mock_result)
-                allow(mock_result).to receive(:each).and_return([{
+            before(:each) do
+                @mock_result = double("query result")
+                allow(@mock_db).to receive(:query).and_return(@mock_result)
+                allow(@mock_result).to receive(:each).and_return([{
                     "id" => "1",
                     "body" => "123",
                     "created_at" => "1111111",
@@ -170,11 +170,29 @@ describe Post do
                     "created_at" => "555",
                     "user_id" => "2"
                 }])
+            end
+            context "when given empty filter" do
+                it "returns all posts sorted by the most recent posts" do
+                    
 
-                posts = Post.all 
-                # puts posts[0].inspect
-                expect(posts).not_to eq([])
-                expect(posts[0].instance_of? Post).to be_truthy
+                    posts = Post.all({})
+                    # puts posts[0].inspect
+                    expect(posts).not_to eq([])
+                    expect(posts[0].instance_of? Post).to be_truthy
+                end
+            end
+
+            context "when given tag filter" do
+                it "returns filtered posts sorted by the most recent posts" do
+                    
+
+                    posts = Post.all({
+                        "tag" => "sOmE_tAg"
+                    })
+                    # puts posts[0].inspect
+                    expect(posts).not_to eq([])
+                    expect(posts[0].instance_of? Post).to be_truthy
+                end
             end
         end
     end
