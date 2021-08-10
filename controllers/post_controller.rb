@@ -35,4 +35,14 @@ class PostController
         }
         return response
     end
+
+    def self.find(params)
+        posts = Post.all
+        response = {
+            :status => 200,
+            :body => {
+                :posts => posts
+            }
+        }
+    end
 end

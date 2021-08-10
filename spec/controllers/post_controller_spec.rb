@@ -60,4 +60,20 @@ describe PostController do
             end
         end
     end
+
+    describe "#find" do
+        it "returns 200 and all posts in database" do
+            allow(Post).to receive(:all) .and_return([Post.new({
+                "id" => "2",
+                "body" => "dd",
+                "created_at" => "555",
+                "user_id" => "2"
+            })])
+
+            response = PostController.find({})
+            expect(response[:status]).to eq 200
+            expect(response[:body]).not_to be nil
+            expect(response[:body][:posts][0].instance_of? Post).to be_truthy
+        end
+    end
 end
