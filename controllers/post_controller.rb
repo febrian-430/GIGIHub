@@ -37,7 +37,9 @@ class PostController
     end
 
     def self.find(params)
-        posts = Post.all
+        posts = Post.all({
+            "tag" => params["tag"]
+        })
         response = {
             :status => 200,
             :body => {

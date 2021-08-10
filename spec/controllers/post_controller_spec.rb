@@ -62,7 +62,7 @@ describe PostController do
     end
 
     describe "#find" do
-        it "returns 200 and all posts in database" do
+        it "returns 200 and the #all result from model" do
             allow(Post).to receive(:all) .and_return([Post.new({
                 "id" => "2",
                 "body" => "dd",
