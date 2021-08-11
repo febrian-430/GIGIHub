@@ -3,6 +3,7 @@ require './models/comment'
 require './models/user'
 require './models/post'
 require './exceptions/not_found'
+require './db/mysql'
 
 
 describe Comment do
@@ -83,6 +84,38 @@ describe Comment do
                     comment = Comment.new(@params)
 
                     expect(comment.save?).to be true
+                end
+            end
+        end
+    end
+
+    describe "manipulates database by" do
+        before(:each) do
+            @mock_db = double("Database")
+        end
+        describe "#save" do
+            context "when doesnt pass validation" do
+                it "returns false" do
+                    comment = Comment.new({})
+                    allow(comment).to receive(:save?).and_return(false)
+
+                    expect(comment.save).to be false
+                end
+            end
+
+            context "when passes validation" do
+                it "returns true" do
+                    comment = Comment.new({
+                        "user_id" => "1".to_i,
+                        "body" => "abc",
+                        "post_id" => "2".to_i
+                    })
+                    
+                    allow(comment).to receive(:save?).and_return(true)
+                    allow(MySQLDB).to receive(:client).and_return(@mock_db)
+                    allow(@mock_db).to receive(:query)
+
+                    expect(comment.save).to be true
                 end
             end
         end

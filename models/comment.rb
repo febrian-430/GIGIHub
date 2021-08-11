@@ -5,7 +5,7 @@ require './models/user'
 
 
 class Comment < JSONable
-    attr_accessor :id, :body, :post_id, :user_id, :created_at, :updated_at, :post, :user
+    attr_reader :id, :body, :post_id, :user_id, :created_at, :updated_at, :post, :user
     def initialize(params)
         @id = params["id"]
         @body = params["body"]
@@ -16,14 +16,13 @@ class Comment < JSONable
 
         @post = nil
         @user = nil
-        puts self.inspect
     end
 
     def save?
         return false if @body.nil? || @body.empty?
         return false if @user_id.nil?
         return false if @post_id.nil?
-        
+
         @user = User.by_id(@user_id)
         raise NotFoundError if @user.nil?
 
@@ -33,4 +32,15 @@ class Comment < JSONable
         return true
     end
 
+    def save
+        #let controller handle notfounderror
+        return false unless save?
+
+        client = MySQLDB.client
+
+        #let controller handle mysql2::error
+        client.query("INSERT INTO comments(post_id, user_id, body) values(#{@user_id}, #{@post_id}, '#{@body}')")
+
+        true
+    end
 end
