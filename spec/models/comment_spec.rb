@@ -36,6 +36,23 @@ describe Comment do
                     expect(comment.save?).to be true
                 end
             end
+
+            context "when user_id is nil" do
+                it "returns false" do
+                    @params["user_id"] = nil
+                    comment = Comment.new(@params)
+
+                    expect(comment.save?).to be_falsey
+                end
+            end
+
+            context "when user_id exists" do
+                it "returns true" do
+                    comment = Comment.new(@params)
+
+                    expect(comment.save?).to be true
+                end
+            end
         end
     end
 end

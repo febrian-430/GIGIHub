@@ -21,7 +21,7 @@ class Comment < JSONable
 
     def save?
         return false if @body.nil? || @body.empty?
-        # return false if 
+        return false if @user_id.nil?
         return true
     end
 
