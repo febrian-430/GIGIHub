@@ -13,7 +13,12 @@ class CommentController
         })
 
         begin
-            comment.save
+            return {
+                :status => 400,
+                :body => {
+                    :msg => "post_id and user_id are required"
+                }
+            } unless comment.save
         rescue NotFoundError
             return {
                 :status => 404,
@@ -29,7 +34,7 @@ class CommentController
                 }
             }
         end
-
+       
         return {
             :status => 201,
             :body => {

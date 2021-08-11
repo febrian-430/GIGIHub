@@ -30,6 +30,24 @@ describe CommentController do
             end
         end
 
+        context "when comment#save returns false" do
+            it "returns 400" do
+                comment = double("Comment")
+
+                allow(Comment).to receive(:new).and_return(comment)
+                allow(comment).to receive(:save).and_return(false)
+
+                response = CommentController.create({
+                    "body" => "",
+                    "user_id" => "",
+                    "post_id" => ""
+                })
+
+                expect(response[:status]).to eq(400)
+                expect(response[:body]).not_to be_nil
+            end
+        end
+
         context "when no error occured" do
             it "returns 201" do
                 comment = double("Comment")
@@ -43,5 +61,6 @@ describe CommentController do
                 expect(response[:body]).not_to be_nil
             end
         end
+        
     end
 end

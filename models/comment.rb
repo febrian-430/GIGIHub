@@ -20,8 +20,8 @@ class Comment < JSONable
 
     def save?
         return false if @body.nil? || @body.empty?
-        return false if @user_id.nil?
-        return false if @post_id.nil?
+        return false if @user_id.nil? || @user_id == 0
+        return false if @post_id.nil? || @user_id == 0
 
         @user = User.by_id(@user_id)
         raise NotFoundError if @user.nil?
@@ -34,7 +34,7 @@ class Comment < JSONable
 
     def save
         #let controller handle notfounderror
-        return false unless save?
+        return false unless self.save?
 
         client = MySQLDB.client
 
