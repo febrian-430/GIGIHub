@@ -22,6 +22,14 @@ class Comment < JSONable
     def save?
         return false if @body.nil? || @body.empty?
         return false if @user_id.nil?
+        return false if @post_id.nil?
+        
+        @user = User.by_id(@user_id)
+        raise NotFoundError if @user.nil?
+
+        @post = Post.by_id(@post_id)
+        raise NotFoundError if @post.nil?
+
         return true
     end
 
