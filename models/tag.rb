@@ -42,6 +42,20 @@ class Tag < JSONable
         tags
     end
 
+    def self.insert_comment_tags(comment_id, raw_tags)
+        return 0 if raw_tags.empty?
+
+        bulk_insert!(raw_tags)
+        client = MySQLDB.client
+        query = "INSERT IGNORE INTO comment_tags(comment_id, tag_id)
+        SELECT #{comment_id}, id
+        FROM tags
+        WHERE name IN (#{raw_tags.map { |tag| "LOWER('#{tag}')" }.join(',')})"
+
+        client.query(query)
+        return true
+    end
+
     def self.insert_post_tags(post_id, raw_tags = [])
         post = Post.by_id(post_id.to_i)
         raise NotFoundError unless post
@@ -96,7 +110,7 @@ class Tag < JSONable
         inserted_ids = []
         query_elements = raw_tags.map {
             |tag|
-            "('%s')" % tag
+            "(LOWER('%s'))" % tag
         }
         statement += query_elements.join(',')
         

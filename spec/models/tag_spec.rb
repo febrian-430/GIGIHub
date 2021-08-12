@@ -93,6 +93,34 @@ describe Tag do
                 end
             end
         end
+
+        describe "#insert_comment_tags" do
+            before(:each) do
+                @mock_db = double("db")
+                allow(MySQLDB).to receive(:client).and_return(@mock_db)
+            end
+            context "when empty array of tags" do
+                it "returns 0" do
+                    allow(Tag).to receive(:bulk_insert!)
+
+                    expect(Tag).not_to receive(:bulk_insert!)
+                    expect(@mock_db).not_to receive(:query)
+                    expect(Tag.insert_comment_tags(-1, [])).to eq(0)
+                end
+            end
+
+            context "when non empty array for tags" do
+                it "should return true and call link method" do
+                    comment_id = 1
+                    tags = ["gigih"]
+
+                    allow(Tag).to receive(:bulk_insert!)
+                    allow(@mock_db).to receive(:query)
+
+                    expect(Tag.insert_comment_tags(comment_id, tags)).to eq(true)
+                end
+            end
+        end
     end
 
     describe "fetch" do
