@@ -1,6 +1,8 @@
 dependencies.txt
 main.rb
 play.rb
+file_server.rb
+public
 *.gem
 *.rbc
 /.config

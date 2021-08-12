@@ -41,7 +41,7 @@ create table comments (
 create table post_attachments (
     id int auto_increment primary key,
     post_id int references posts(id) ON DELETE CASCADE,
-    file_path varchar(255) not null
+    filename varchar(255) not null
 );
 
 create table tags (
