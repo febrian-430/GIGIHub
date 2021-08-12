@@ -2,6 +2,8 @@ require './utils/JSONable'
 require './exceptions/not_found'
 require './models/post'
 require './models/user'
+require './models/tag'
+require './utils/parser'
 
 
 class Comment < JSONable
@@ -35,12 +37,12 @@ class Comment < JSONable
     def save
         #let controller handle notfounderror
         return false unless self.save?
-
+        tags = Parser.hashtags(@body)
         client = MySQLDB.client
 
         #let controller handle mysql2::error
         client.query("INSERT INTO comments(post_id, user_id, body) values(#{@user_id}, #{@post_id}, '#{@body}')")
-
+        Tag.insert_comment_tags(client.last_id, tags) unless tags.empty?
         true
     end
 end

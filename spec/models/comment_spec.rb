@@ -118,6 +118,44 @@ describe Comment do
                     expect(comment.save).to be true
                 end
             end
+
+            context "when body contains no hashtags" do
+                it "inserts tags in body and returns true" do
+                    comment = Comment.new({
+                        "user_id" => "1".to_i,
+                        "body" => "abc",
+                        "post_id" => "2".to_i
+                    })
+                    
+                    allow(comment).to receive(:save?).and_return(true)
+                    allow(MySQLDB).to receive(:client).and_return(@mock_db)
+                    allow(@mock_db).to receive(:query)
+                    allow(Parser).to receive(:hashtags).and_return([])
+
+                    expect(Tag).not_to receive(:insert_comment_tags)
+                    expect(comment.save).to be true
+                end
+            end
+
+            context "when body contains hashtags" do
+                it "inserts tags in body and returns true" do
+                    comment = Comment.new({
+                        "user_id" => "1".to_i,
+                        "body" => "abc #ab",
+                        "post_id" => "2".to_i
+                    })
+                    
+                    allow(comment).to receive(:save?).and_return(true)
+                    allow(MySQLDB).to receive(:client).and_return(@mock_db)
+                    allow(@mock_db).to receive(:query)
+                    allow(@mock_db).to receive(:last_id).and_return(1)
+
+                    allow(Parser).to receive(:hashtags).and_return(["#ab"])
+
+                    expect(Tag).to receive(:insert_comment_tags).with(1, ["#ab"])
+                    expect(comment.save).to be true
+                end
+            end
         end
     end
 end
