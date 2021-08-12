@@ -21,7 +21,7 @@ create table users (
 
 create table posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id int references users(id),
+    user_id int references users(id) ON DELETE CASCADE,
     body text(1000) not null,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -30,8 +30,8 @@ create table posts (
 
 create table comments (
     id int auto_increment primary key,
-    post_id int references posts(id),
-    user_id int references users(id),
+    post_id int references posts(id) ON DELETE CASCADE,
+    user_id int references users(id) ON DELETE CASCADE,
     body varchar(1000) not null,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -40,7 +40,7 @@ create table comments (
 
 create table post_attachments (
     id int auto_increment primary key,
-    post_id int references posts(id),
+    post_id int references posts(id) ON DELETE CASCADE,
     file_path varchar(255) not null
 );
 
@@ -51,16 +51,16 @@ create table tags (
 );
 
 create table post_tags (
-    post_id int references posts(id),
-    tag_id int references tags(id),
+    post_id int references posts(id) ON DELETE CASCADE,
+    tag_id int references tags(id) ON DELETE CASCADE,
     created_at timestamp default current_timestamp,
 
     primary key(tag_id, post_id)
 );
 
 create table comment_tags (
-    comment_id int references comments(id),
-    tag_id int references tags(id),
+    comment_id int references comments(id) ON DELETE CASCADE,
+    tag_id int references tags(id) ON DELETE CASCADE,
     created_at timestamp default current_timestamp,
 
     primary key(tag_id, comment_id)
