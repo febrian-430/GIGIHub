@@ -94,7 +94,7 @@ class Tag < JSONable
         query = "INSERT IGNORE INTO post_tags(post_id, tag_id)
         SELECT #{post_id}, id
         FROM tags
-        WHERE name IN (#{raw_tags.map { |tag| "'#{tag}'" }.join(',')})"
+        WHERE name IN (#{raw_tags.map { |tag| "LOWER('#{tag}')" }.join(',')})"
         puts query
 
         client.query(query)
