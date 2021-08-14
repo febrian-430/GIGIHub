@@ -3,12 +3,15 @@ require './models/tag'
 require './utils/JSONable'
 require './utils/parser'
 require './exceptions/not_found'
+require './models/post_attachment'
 
 class Post < JSONable
-    attr_accessor :body, :created_at, :updated_at, :user_id, :user, :tags
+    attr_accessor :body, :created_at, :updated_at, :user_id, :user, :tags, :attachments
     attr_reader :id
+    attr_writer :raw_attachments
     
     def initialize(params)
+        @showable_variables = ["id", "body", "created_at", "updated_at", "user", "tags", "attachments"]
         @id = params["id"]
         @body = params["body"]
         @created_at = params["created_at"]
@@ -16,6 +19,8 @@ class Post < JSONable
         @user = nil
         @user_id = params["user_id"].to_i
         @tags = []
+        @raw_attachments = params["attachments"].to_a
+        @attachments = []
         # if params[:user_id] 
         #     @user = User.by_id(params[:user_id].to_i)
         # end
@@ -40,10 +45,10 @@ class Post < JSONable
             @id = client.last_id
 
             Tag.insert_post_tags(@id, raw_tags) unless raw_tags.empty?
+            PostAttachment.attach_to(self, @raw_attachments) unless @raw_attachments.empty?
         rescue NotFoundError => ex
             raise ex
         end
-        
         true
     end
 
@@ -75,7 +80,7 @@ class Post < JSONable
         return true if find(id)
         return false
     end
-
+    
     def self.by_id(id)
         row = find(id)
         post = nil
@@ -83,10 +88,16 @@ class Post < JSONable
 
         post = Post.new(row)
         post.user = User.by_id(post.user_id)
+
         post.tags = Tag.by_post(post.id)
 
+        post.attachments = PostAttachment.by_post(post.id)
+
+        # post.load
         return post
     end
+
+    
 
     #private
     def self.find(id)

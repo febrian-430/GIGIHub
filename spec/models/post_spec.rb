@@ -94,6 +94,46 @@ describe Post do
                     expect(post.save).to eq(true)
                 end
             end
+
+            context "when raw_attachments field is empty" do
+                it "doesnt call PostAttachment#attach_to" do
+                    post = Post.new({
+                        "user_id": 1,
+                        "body" => "ha ha"
+                    })
+                    allow(post).to receive(:save?).and_return(true)
+                    mock_db = double
+                    allow(MySQLDB).to receive(:client).and_return(mock_db)
+                    allow(mock_db).to receive(:query)
+                    allow(mock_db).to receive(:last_id).and_return(123)
+                    
+                    expect(PostAttachment).not_to receive(:attach_to)
+                    expect(post.save).to eq(true)
+                end
+            end
+
+            context "when raw_attachments field is not empty" do
+                it "calls PostAttachment#attach_to" do
+                    post = Post.new({
+                        "user_id": 1,
+                        "body" => "ha ha",
+                        "attachments" => [
+                            {
+                                "filename" => "test",
+                                "mimetype" => "test"
+                            }
+                        ]
+                    })
+                    allow(post).to receive(:save?).and_return(true)
+                    mock_db = double
+                    allow(MySQLDB).to receive(:client).and_return(mock_db)
+                    allow(mock_db).to receive(:query)
+                    allow(mock_db).to receive(:last_id).and_return(123)
+
+                    expect(PostAttachment).to receive(:attach_to)
+                    expect(post.save).to eq(true)
+                end
+            end
         end
     end
 
