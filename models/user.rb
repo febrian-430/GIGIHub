@@ -6,6 +6,7 @@ class User < JSONable
     attr_reader :id
 
     def initialize(id: nil, username: nil, email: nil, bio_description: nil, join_date: nil)
+        @showable_variables = ["id", "username", "email", "bio_description", "join_date"]
         @id = id
         @username = username
         @email = email

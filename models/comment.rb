@@ -9,6 +9,7 @@ require './utils/parser'
 class Comment < JSONable
     attr_reader :id, :body, :post_id, :user_id, :created_at, :updated_at, :post, :user
     def initialize(params)
+        @showable_variables = ["id", "body", "created_at", "updated_at", "post", "user"]
         @id = params["id"]
         @body = params["body"]
         @post_id = params["post_id"]

@@ -5,6 +5,7 @@ require './utils/JSONable'
 
 class Tag < JSONable
     def initialize(params)
+        @showable_variables = ["id", "name", "count"]
         @id = params["id"]
         @name = params["name"]
         @created_at = params["created_at"]
