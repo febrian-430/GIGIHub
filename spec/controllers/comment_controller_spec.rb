@@ -61,6 +61,24 @@ describe CommentController do
                 expect(response[:body]).not_to be_nil
             end
         end
-        
+
+        # context "when request contain attachment" do
+        #     it "returns 201, and raw_attachment is not nil" do
+        #         comment = double("Comment")
+
+        #         allow(Comment).to receive(:new).and_return(comment)
+        #         allow(comment).to receive(:save).and_return(true)
+
+        #         response = CommentController.create({
+        #             "attachment" => {
+        #                 "filename" => "name",
+        #                 "mimetype" => "mime"
+        #             }
+        #         })
+        #         expect(comment.attachment).not_to be_nil
+        #         expect(response[:status]).to eq(201)
+        #         expect(response[:body]).not_to be_nil
+        #     end
+        # end
     end
 end

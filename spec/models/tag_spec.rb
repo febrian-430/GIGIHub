@@ -132,7 +132,7 @@ describe Tag do
         describe "#by_post" do
             context "when post_id doesnt exist" do
                 it "raises not found error" do
-                    allow(Post).to receive(:by_id_exists).and_return(false)
+                    allow(Post).to receive(:by_id_exists?).and_return(false)
 
                     expect { Tag.by_post(-1) }.to raise_error(NotFoundError)
                 end
@@ -142,7 +142,7 @@ describe Tag do
                 it "returns array of tags" do
                     post_dbl = double("post")
                     mock_result = double("mock result")
-                    allow(Post).to receive(:by_id_exists).and_return(post_dbl)
+                    allow(Post).to receive(:by_id_exists?).and_return(post_dbl)
                     allow(@mock_db).to receive(:query).and_return(mock_result)
 
                     expect(Tag).to receive(:bind).with(mock_result)

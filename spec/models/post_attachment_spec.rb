@@ -45,7 +45,7 @@ describe PostAttachment do
     describe "#by_post" do
         context "when post_id doesnt exist in database" do
             it "raises NotFoundError" do
-                allow(Post).to receive(:by_id_exists).and_return(false)
+                allow(Post).to receive(:by_id_exists?).and_return(false)
                 expect{PostAttachment.by_post(-1)}.to raise_error(NotFoundError)
             end
         end
@@ -54,7 +54,7 @@ describe PostAttachment do
             it "returns post attachments" do
                 mock_db = double("database")
                 result_dbl = double("query result")
-                allow(Post).to receive(:by_id_exists).and_return(true)
+                allow(Post).to receive(:by_id_exists?).and_return(true)
                 allow(MySQLDB).to receive(:client).and_return(mock_db)
                 allow(mock_db).to receive(:query).and_return(result_dbl)
 

@@ -1,0 +1,4 @@
+IDEAS:
+change JSONable into 'Model' => jsonable and 
+    read / bind object values (given hash as param) 'automatically' 
+    by looping through instance variables and check if the hash has the key similar to instance var
