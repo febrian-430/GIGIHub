@@ -33,9 +33,16 @@ create table comments (
     post_id int references posts(id) ON DELETE CASCADE,
     user_id int references users(id) ON DELETE CASCADE,
     body varchar(1000) not null,
-
+    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
+);
+
+create table comment_attachments (
+    id int auto_increment primary key,
+    comment_id int references comments(id) on delete cascade,
+    filename varchar(255) not null,
+    mimetype varchar(100) not null
 );
 
 create table post_attachments (
