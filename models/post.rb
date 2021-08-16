@@ -4,22 +4,27 @@ require './utils/JSONable'
 require './utils/parser'
 require './exceptions/not_found'
 require './models/post_attachment'
+require './models/comment'
+
 
 class Post < JSONable
     attr_accessor :body, :created_at, :updated_at, :user_id, :user, :tags, :attachments
-    attr_reader :id
+    attr_reader :id, :comments
     attr_writer :raw_attachments
     
     def initialize(params)
-        @showable_variables = ["id", "body", "created_at", "updated_at", "user", "tags", "attachments"]
+        @showable_variables = ["id", "body", "created_at", "updated_at", "user", "tags", "attachments", "comments"]
         @id = params["id"]
         @body = params["body"]
         @created_at = params["created_at"]
         @updated_at = params["updated_at"]
+        
         @user = nil
         @user_id = params["user_id"].to_i
-        @tags = []
 
+        @tags = []
+        @comments = []
+        
         @raw_attachments = params["attachments"].to_a
         @attachments = []
         # if params[:user_id] 
@@ -92,6 +97,7 @@ class Post < JSONable
         @user = User.by_id(@user_id)
         @tags = Tag.by_post(@id)
         @attachments = PostAttachment.by_post(@id)
+        @comments = Comment.by_post(@id)
     end
     
     def self.by_id(id)
