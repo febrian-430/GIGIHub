@@ -22,9 +22,11 @@ class User < JSONable
 
     def save
         return false unless self.save?
+
         client = MySQLDB.client
         client.query("INSERT INTO users (username, email, bio_description) values('#@username', '#@email', '#@bio_description')")
         @id = client.last_id
+        
         true
     end
 
@@ -44,6 +46,7 @@ class User < JSONable
 
     def self.by_username(username)
         result = MySQLDB.client.query("SELECT * FROM users WHERE username = '#{username}'")
+
         row = result.each[0]
         return nil unless row
 
@@ -59,6 +62,7 @@ class User < JSONable
 
     def self.by_id(id)
         result = MySQLDB.client.query("SELECT * FROM users WHERE id = #{id}")
+
         row = result.each[0]
         return nil unless row
 

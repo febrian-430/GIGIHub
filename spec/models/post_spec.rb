@@ -143,14 +143,14 @@ describe Post do
             allow(MySQLDB).to receive(:client).and_return(@mock_db)
         end
 
-        describe "#by_id_exists" do
+        describe "#by_id_exists?" do
             context "when given id doesnt exist" do
                 it "returns false" do
                     mock_result = double("query result")
                     allow(@mock_db).to receive(:query).and_return(mock_result)
                     allow(mock_result).to receive(:each).and_return([])
 
-                    expect(Post.by_id_exists(-1)).to eq(false)
+                    expect(Post.by_id_exists?(-1)).to eq(false)
                 end
             end
 
@@ -162,7 +162,7 @@ describe Post do
                         "id" => 1
                     }])
                         
-                    expect(Post.by_id_exists(-1)).to eq(true)
+                    expect(Post.by_id_exists?(-1)).to eq(true)
                 end
             end
         end

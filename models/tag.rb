@@ -37,9 +37,9 @@ class Tag < JSONable
         LIMIT #{number}"
 
         result = MySQLDB.client.query(query)
-        raw = result.each
+        data = result.each
         
-        tags = bind(raw)
+        tags = bind(data)
         tags
     end
 
@@ -47,6 +47,7 @@ class Tag < JSONable
         return 0 if raw_tags.empty?
 
         bulk_insert!(raw_tags)
+
         client = MySQLDB.client
         query = "INSERT IGNORE INTO comment_tags(comment_id, tag_id)
         SELECT #{comment_id}, id
@@ -59,6 +60,7 @@ class Tag < JSONable
 
     def self.insert_post_tags(post_id, raw_tags = [])
         post = Post.by_id(post_id.to_i)
+
         raise NotFoundError unless post
 
         link_tags_to_post!(post.id, raw_tags) unless raw_tags.empty?
@@ -66,20 +68,21 @@ class Tag < JSONable
     end
 
     def self.by_post(post_id)
-        post = Post.by_id_exists(post_id.to_i)
+        post = Post.by_id_exists?(post_id.to_i)
         raise NotFoundError unless post
 
         client = MySQLDB.client
-        raw = client.query("SELECT t.* FROM tags t JOIN post_tags pt ON t.id = pt.tag_id 
+        query_result = client.query("SELECT t.* FROM tags t JOIN post_tags pt ON t.id = pt.tag_id 
             WHERE post_id = #{post_id}")
-        tags = bind(raw)
+
+        tags = bind(query_result)
         return tags
     end
 
     #private
-    def self.bind(raw)
+    def self.bind(raw_data)
         tags = []
-        raw.each do |row| 
+        raw_data.each do |row| 
             tag = Tag.new(row)
             tags << tag
         end
@@ -91,6 +94,7 @@ class Tag < JSONable
         return 0 if raw_tags.empty?
 
         bulk_insert!(raw_tags)
+
         client = MySQLDB.client
         query = "INSERT IGNORE INTO post_tags(post_id, tag_id)
         SELECT #{post_id}, id
@@ -107,6 +111,7 @@ class Tag < JSONable
         return 0 if raw_tags.empty?
 
         client = MySQLDB.client
+
         statement = "INSERT IGNORE INTO tags(name) VALUES"
         inserted_ids = []
         query_elements = raw_tags.map {

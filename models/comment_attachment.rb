@@ -13,13 +13,16 @@ class CommentAttachment < Attachment
     def self.attach_to(obj, files = [])
         raise(TypeError, "expected Comment instance") unless obj.instance_of? Comment
         return 0 if files.empty?
-        client = MySQLDB.client
-        filenames = store_files(files)
-        query = "INSERT INTO comment_attachments(comment_id, filename, mimetype) VALUES"
         
+        client = MySQLDB.client
+        
+        filenames = store_files(files)
+
+        query = "INSERT INTO comment_attachments(comment_id, filename, mimetype) VALUES"
         insert_elements = files.map { |file| "(#{obj.id}, '#{file["filename"]}','#{file["mimetype"]}')" }
         query += insert_elements.join(',')
         client.query(query)
+
         return client.affected_rows
     end
 end
