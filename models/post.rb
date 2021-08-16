@@ -80,6 +80,12 @@ class Post < JSONable
         return true if find(id)
         return false
     end
+
+    def load
+        @user = User.by_id(@user_id)
+        @tags = Tag.by_post(@id)
+        @attachments = PostAttachment.by_post(@id)
+    end
     
     def self.by_id(id)
         row = find(id)
@@ -87,13 +93,13 @@ class Post < JSONable
         return post unless row
 
         post = Post.new(row)
-        post.user = User.by_id(post.user_id)
+        # post.user = User.by_id(post.user_id)
 
-        post.tags = Tag.by_post(post.id)
+        # post.tags = Tag.by_post(post.id)
 
-        post.attachments = PostAttachment.by_post(post.id)
+        # post.attachments = PostAttachment.by_post(post.id)
 
-        # post.load
+        post.load
         return post
     end
 
