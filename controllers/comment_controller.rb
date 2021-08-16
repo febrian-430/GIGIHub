@@ -6,10 +6,19 @@ require './exceptions/not_found'
 
 class CommentController
     def self.create(params)
+        attachment = nil
+        if params["attachment"]
+            attachment = {
+                "filename" => params["attachment"]["filename"],
+                "mimetype" => params["attachment"]["mimetype"],
+                "file" => params["attachment"]["tempfile"]
+            }
+        end
         comment = Comment.new({
             "body" => params["body"],
             "user_id" => params["user_id"].to_i,
-            "post_id" => params["post_id"].to_i
+            "post_id" => params["post_id"].to_i,
+            "attachment" => attachment
         })
 
         begin
