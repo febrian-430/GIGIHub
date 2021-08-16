@@ -4,9 +4,9 @@ require './db/mysql'
 
 describe User do
     before(:each) do
-        @insert_ready_user = User.new(username: 'test', email: 'test@test.com')
-        @empty_user = User.new
-        @update_ready_user = User.new(id: 1, username: 'test', email: 'test@test.com', bio_description: 'asdasdad')
+        @insert_ready_user = User.new({"username" => 'test', "email" => 'test@test.com'})
+        @empty_user = User.new({})
+        @update_ready_user = User.new({"id" => 1, "username" => 'test', "email" => 'test@test.com', "bio_description" => 'asdasdad'})
     end
     describe "validation before manipulating database" do
         describe "#save?" do

@@ -5,13 +5,13 @@ class User < JSONable
     attr_accessor :username, :email, :bio_description
     attr_reader :id
 
-    def initialize(id: nil, username: nil, email: nil, bio_description: nil, join_date: nil)
+    def initialize(params)
         @showable_variables = ["id", "username", "email", "bio_description", "join_date"]
-        @id = id
-        @username = username
-        @email = email
-        @bio_description = bio_description
-        @join_date = join_date
+        @id = params["id"].to_i
+        @username = params["username"]
+        @email = params["email"]
+        @bio_description = params["bio_description"]
+        @join_date = params["join_date"]
     end
 
     def save? 
@@ -50,13 +50,7 @@ class User < JSONable
         row = result.each[0]
         return nil unless row
 
-        user = User.new(
-            id: row["id"].to_i, 
-            username: row["username"], 
-            email: row["email"],
-            bio_description: row["bio_description"],
-            join_date: row["join_date"]
-        )
+        user = User.new(row)
         return user
     end
 
@@ -66,13 +60,7 @@ class User < JSONable
         row = result.each[0]
         return nil unless row
 
-        user = User.new(
-            id: row["id"].to_i, 
-            username: row["username"], 
-            email: row["email"],
-            bio_description: row["bio_description"],
-            join_date: row["join_date"]
-        )
+        user = User.new(row)
         return user
     end
 end
