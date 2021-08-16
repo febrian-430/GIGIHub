@@ -43,6 +43,7 @@ class Comment < JSONable
         return false unless self.save?
         
         tags = Parser.hashtags(@body)
+
         client = MySQLDB.client
         #let controller handle mysql2::error
         client.query("INSERT INTO comments(post_id, user_id, body) values(#{@user_id}, #{@post_id}, '#{@body}')")
@@ -55,13 +56,16 @@ class Comment < JSONable
         true
     end
 
-    def by_post(post_id)
+    def self.by_post(post_id)
+        post = Post.by_id_exists?(post_id)
+        raise NotFoundError unless post
+        
         client = MySQLDB.client
         result = client.query("SELECT * FROM comments WHERE post_id = #{post_id}")
         return bind(result)
     end
 
-    def bind(collection)
+    def self.bind(collection)
         result = []
         collection.each do |data|
             result << Comment.new(data)
