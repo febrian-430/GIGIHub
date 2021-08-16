@@ -89,6 +89,29 @@ describe Comment do
         end
     end
 
+    describe "#by_post" do
+        context "given post id doesnt exist" do
+            it "raises NotFoundError" do
+                allow(Post).to receive(:by_id_exists?).and_return(false)
+
+                expect{Comment.by_post(-1)}.to raise_error(NotFoundError)
+            end
+        end
+
+        context "given post id exists" do
+            it "returns the comments" do
+                allow(Post).to receive(:by_id_exists?).and_return(true)
+                mock_db = double
+                allow(MySQLDB).to receive(:client).and_return(mock_db)
+                allow(Comment).to receive(:bind).and_return([])
+                
+                expect(mock_db).to receive(:query)
+                comments = Comment.by_post(1)
+                expect(comments.instance_of? Array).to eq(true)
+            end
+        end
+    end
+
     describe "manipulates database by" do
         before(:each) do
             @mock_db = double("Database")
