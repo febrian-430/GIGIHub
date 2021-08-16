@@ -114,6 +114,8 @@ describe Comment do
                     allow(comment).to receive(:save?).and_return(true)
                     allow(MySQLDB).to receive(:client).and_return(@mock_db)
                     allow(@mock_db).to receive(:query)
+                    allow(@mock_db).to receive(:last_id).and_return(1)
+
 
                     expect(comment.save).to be true
                 end
@@ -131,6 +133,8 @@ describe Comment do
                     allow(MySQLDB).to receive(:client).and_return(@mock_db)
                     allow(@mock_db).to receive(:query)
                     allow(Parser).to receive(:hashtags).and_return([])
+                    allow(@mock_db).to receive(:last_id).and_return(1)
+
 
                     expect(Tag).not_to receive(:insert_comment_tags)
                     expect(comment.save).to be true
@@ -154,6 +158,47 @@ describe Comment do
 
                     expect(Tag).to receive(:insert_comment_tags).with(1, ["#ab"])
                     expect(comment.save).to be true
+                end
+            end
+
+            context "when doesn't contain an attachment" do
+                it "doesn't call CommentAttachment#attach_to" do
+                    comment = Comment.new({
+                        "user_id": 1,
+                        "body" => "ha ha"
+                    })
+
+                    allow(comment).to receive(:save?).and_return(true)
+                    mock_db = double
+                    allow(MySQLDB).to receive(:client).and_return(mock_db)
+                    allow(mock_db).to receive(:query)
+                    allow(mock_db).to receive(:last_id).and_return(123)
+                    
+                    expect(mock_db).to receive(:last_id)
+                    expect(CommentAttachment).not_to receive(:attach_to)
+                    expect(comment.save).to eq(true)
+                end
+            end
+
+            context "when contains an attachment" do
+                it "calls CommentAttachment#attach_to" do
+                    comment = Comment.new({
+                        "user_id": 1,
+                        "body" => "ha ha",
+                        "attachment" => {
+                            "filename" => "test",
+                            "mimetype" => "test"
+                        }
+                    })
+                    allow(comment).to receive(:save?).and_return(true)
+                    mock_db = double
+                    allow(MySQLDB).to receive(:client).and_return(mock_db)
+                    allow(mock_db).to receive(:query)
+                    allow(mock_db).to receive(:last_id).and_return(123)
+
+                    expect(mock_db).to receive(:last_id)
+                    expect(CommentAttachment).to receive(:attach_to)
+                    expect(comment.save).to eq(true)
                 end
             end
         end

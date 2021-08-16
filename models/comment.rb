@@ -3,6 +3,7 @@ require './exceptions/not_found'
 require './models/post'
 require './models/user'
 require './models/tag'
+require './models/comment_attachment'
 require './utils/parser'
 
 
@@ -16,9 +17,11 @@ class Comment < JSONable
         @user_id = params["user_id"]
         @created_at = params["created_at"]
         @updated_at = params["updated_at"]
-
+        @raw_attachment = params["attachment"]
+         
         @post = nil
         @user = nil
+        @attachment = nil
     end
 
     def save?
@@ -43,7 +46,10 @@ class Comment < JSONable
 
         #let controller handle mysql2::error
         client.query("INSERT INTO comments(post_id, user_id, body) values(#{@user_id}, #{@post_id}, '#{@body}')")
+        @id = client.last_id
         Tag.insert_comment_tags(client.last_id, tags) unless tags.empty?
+
+        CommentAttachment.attach_to(self, [@raw_attachment]) unless @raw_attachment.nil?
         true
     end
 end
