@@ -3,11 +3,11 @@ require './models/user'
 
 class UserController
     def self.create(params)
-        user = User.new(
-            username: params["username"],
-            email: params["email"],
-            bio_description: params["bio_description"]
-        )
+        user = User.new({
+            "username" => params["username"],
+            "email" => params["email"],
+            "bio_description" => params["bio_description"]
+        })
 
         return {
             :status => 400,
@@ -51,6 +51,7 @@ class UserController
     end
 
     def self.show_by_username(params)
+        puts params.inspect
         user = User.by_username(params["username"])
 
         return {
