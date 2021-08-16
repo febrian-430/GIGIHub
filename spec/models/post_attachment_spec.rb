@@ -11,7 +11,7 @@ require './exceptions/not_found'
 describe PostAttachment do
     describe "#attach_to" do
         context "when not given an object that is not a Post" do
-            it "raises TypeMismatchError" do
+            it "raises TypeError" do
                 expect { PostAttachment.attach_to({}, [])}.to raise_error(TypeError)
             end
         end
