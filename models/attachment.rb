@@ -1,4 +1,4 @@
-require './utils/model'
+require './models/model'
 require './utils/storage_manager'
 
 class Attachment < Model

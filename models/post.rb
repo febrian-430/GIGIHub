@@ -1,6 +1,6 @@
 require './db/mysql'
 require './models/tag'
-require './utils/model'
+require './models/model'
 require './utils/parser'
 require './exceptions/not_found'
 require './models/post_attachment'
@@ -75,18 +75,7 @@ class Post < Model
 
         raw = result.each
         posts = bind(Post ,raw)
-        # raw.each do |row|
-        #     post = Post.new({
-        #         "id" => row["id"],
-        #         "body" => row["body"],
-        #         "created_at" => row["created_at"],
-        #         "updated_at" => row["updated_at"],
-        #         "user_id" => row["user_id"]
-        #     })
 
-        #     post.user = User.by_id(post.user_id)
-        #     posts.push post
-        # end
         return posts
     end
 

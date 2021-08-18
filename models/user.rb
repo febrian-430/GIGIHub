@@ -1,5 +1,5 @@
 require './db/mysql'
-require './utils/model'
+require './models/model'
 require './exceptions/user_errors'
 
 class User < Model
@@ -54,27 +54,19 @@ class User < Model
 
     def self.by_email(email)
         result = MySQLDB.client.query("SELECT * FROM users WHERE email = '#{email}'")
-        users = bind(result)
+        users = bind(User, result)
         return users[0]
     end
 
     def self.by_username(username)
         result = MySQLDB.client.query("SELECT * FROM users WHERE username = '#{username}'")
-        users = bind(result)
+        users = bind(User, result)
         return users[0]
     end
 
     def self.by_id(id)
         result = MySQLDB.client.query("SELECT * FROM users WHERE id = #{id}")
-        users = bind(result)
+        users = bind(User, result)
         return users[0]
-    end
-
-    def self.bind(raw)
-        result = []
-        raw.each do |data|
-            result << User.new(data)
-        end
-        return result
     end
 end

@@ -1,6 +1,6 @@
 require './models/post'
 require './exceptions/not_found'
-require './utils/model'
+require './models/model'
 
 
 class Tag < Model
@@ -39,7 +39,7 @@ class Tag < Model
         result = MySQLDB.client.query(query)
         data = result.each
         
-        tags = bind(data)
+        tags = bind(Tag, data)
         tags
     end
 
@@ -75,19 +75,10 @@ class Tag < Model
         query_result = client.query("SELECT t.* FROM tags t JOIN post_tags pt ON t.id = pt.tag_id 
             WHERE post_id = #{post_id}")
 
-        tags = bind(query_result)
+        tags = bind(Tag, query_result)
         return tags
     end
 
-    #private
-    def self.bind(raw_data)
-        tags = []
-        raw_data.each do |row| 
-            tag = Tag.new(row)
-            tags << tag
-        end
-        tags
-    end
 
     #private 
     def self.link_tags_to_post!(post_id, raw_tags=[])
@@ -124,5 +115,5 @@ class Tag < Model
         return client.affected_rows
     end
 
-    private_class_method :bulk_insert!, :link_tags_to_post!, :bind
+    private_class_method :bulk_insert!, :link_tags_to_post!
 end

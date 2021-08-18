@@ -34,20 +34,8 @@ class PostAttachment < Attachment
         query_result = client.query("SELECT patt.* FROM post_attachments patt JOIN posts p ON patt.post_id = p.id 
             WHERE p.id = #{post_id}")
 
-        attachments = bind(query_result)
+        attachments = bind(PostAttachment, query_result)
         return attachments
     end
 
-    #private
-    def self.bind(data)
-        attachments = []
-
-        data.each do |row| 
-            attachment = PostAttachment.new(row)
-            attachments << attachment
-        end
-
-        attachments
-    end
-    private_class_method :bind
 end

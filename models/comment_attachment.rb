@@ -30,19 +30,9 @@ class CommentAttachment < Attachment
         query_result = client.query("SELECT catt.* FROM comment_attachments catt JOIN comments c ON catt.comment_id = c.id 
             WHERE c.id = #{comment_id}")
 
-        attachments = bind(query_result)
+        attachments = bind(CommentAttachment, query_result)
         return attachments[0]
     end
 
-    def self.bind(data)
-        attachments = []
-
-        data.each do |row| 
-            attachment = CommentAttachment.new(row)
-            attachments << attachment
-        end
-
-        attachments
-    end
     private_class_method :bind
 end

@@ -1,4 +1,4 @@
-require './utils/model'
+require './models/model'
 require './exceptions/not_found'
 require './models/post'
 require './models/user'
@@ -44,7 +44,7 @@ class Comment < Model
         return false unless self.save?
         
         tags = Parser.hashtags(@body)
-
+        puts self.class
         client = MySQLDB.client
         #let controller handle mysql2::error
         client.query("INSERT INTO comments(post_id, user_id, body) values(#{@post_id}, #{@user_id}, '#{@body}')")
@@ -64,7 +64,7 @@ class Comment < Model
         client = MySQLDB.client
         result = client.query("SELECT * FROM comments WHERE post_id = #{post_id}")
         
-        comments = bind(result)
+        comments = bind(Comment, result)
         
         comments.each_index do |index|
             comments[index].load
@@ -77,14 +77,4 @@ class Comment < Model
         @user = User.by_id(@user_id)
         @attachment = CommentAttachment.by_comment(@id)
     end
-
-    def self.bind(collection)
-        result = []
-        collection.each do |data|
-            result << Comment.new(data)
-        end
-        return result
-    end
-
-    private_class_method :bind
 end
