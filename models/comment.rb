@@ -1,4 +1,4 @@
-require './utils/JSONable'
+require './utils/model'
 require './exceptions/not_found'
 require './models/post'
 require './models/user'
@@ -7,7 +7,7 @@ require './models/comment_attachment'
 require './utils/parser'
 
 
-class Comment < JSONable
+class Comment < Model
     attr_reader :id, :body, :post_id, :user_id, :created_at, :updated_at, :post, :user, :raw_attachments
     attr_accessor :attachment
     def initialize(params)

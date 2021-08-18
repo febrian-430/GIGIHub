@@ -1,9 +1,9 @@
 require './models/post'
 require './exceptions/not_found'
-require './utils/JSONable'
+require './utils/model'
 
 
-class Tag < JSONable
+class Tag < Model
     def initialize(params)
         @showable_variables = ["id", "name", "count"]
         @id = params["id"]

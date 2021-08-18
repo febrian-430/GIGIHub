@@ -1,7 +1,7 @@
-require './utils/JSONable'
+require './utils/model'
 require './utils/storage_manager'
 
-class Attachment < JSONable
+class Attachment < Model
     def initialize(params)
         @id = params["id"]
         @filename = params["filename"]

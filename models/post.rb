@@ -1,13 +1,13 @@
 require './db/mysql'
 require './models/tag'
-require './utils/JSONable'
+require './utils/model'
 require './utils/parser'
 require './exceptions/not_found'
 require './models/post_attachment'
 require './models/comment'
 
 
-class Post < JSONable
+class Post < Model
     attr_accessor :body, :created_at, :updated_at, :user_id, :user, :tags, :attachments
     attr_reader :id, :comments
     attr_writer :raw_attachments
@@ -74,18 +74,19 @@ class Post < JSONable
         )
 
         raw = result.each
-        raw.each do |row|
-            post = Post.new({
-                "id" => row["id"],
-                "body" => row["body"],
-                "created_at" => row["created_at"],
-                "updated_at" => row["updated_at"],
-                "user_id" => row["user_id"]
-            })
+        posts = bind(Post ,raw)
+        # raw.each do |row|
+        #     post = Post.new({
+        #         "id" => row["id"],
+        #         "body" => row["body"],
+        #         "created_at" => row["created_at"],
+        #         "updated_at" => row["updated_at"],
+        #         "user_id" => row["user_id"]
+        #     })
 
-            post.user = User.by_id(post.user_id)
-            posts.push post
-        end
+        #     post.user = User.by_id(post.user_id)
+        #     posts.push post
+        # end
         return posts
     end
 

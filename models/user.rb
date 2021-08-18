@@ -1,8 +1,8 @@
 require './db/mysql'
-require './utils/JSONable'
+require './utils/model'
 require './exceptions/user_errors'
 
-class User < JSONable
+class User < Model
     attr_accessor :username, :email, :bio_description
     attr_reader :id
 

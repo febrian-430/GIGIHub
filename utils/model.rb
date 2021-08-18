@@ -1,4 +1,4 @@
-class JSONable
+class Model
     def to_json(options = {})
         hash = {}
         showable = self.instance_variable_get :@showable_variables
@@ -11,9 +11,11 @@ class JSONable
         hash.to_json
     end
     
-    # def from_json! string
-    #     JSON.load(string).each do |var, val|
-    #         self.public_send var, val
-    #     end
-    # end
+    def self.bind(type, arr_of_hash)
+        result = []
+        arr_of_hash.each do |data|
+            result << type.new(data)
+        end
+        return result
+    end
 end
