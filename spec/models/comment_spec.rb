@@ -68,7 +68,7 @@ describe Comment do
                     user_dbl = double("User")
                     allow(User).to receive(:by_id).and_return(user_dbl)
 
-                    allow(Post).to receive(:by_id).and_return(nil)
+                    allow(Post).to receive(:by_id_exists?).and_return(false)
                     comment = Comment.new(@params)
 
                     expect { comment.save? }.to raise_error(NotFoundError)
@@ -80,7 +80,7 @@ describe Comment do
                     user_dbl = double("User")
                     allow(User).to receive(:by_id).and_return(user_dbl)
                     post_dbl = double("Post")
-                    allow(Post).to receive(:by_id).and_return(post_dbl)
+                    allow(Post).to receive(:by_id_exists?).and_return(true)
                     comment = Comment.new(@params)
 
                     expect(comment.save?).to be true

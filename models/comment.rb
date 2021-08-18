@@ -9,8 +9,9 @@ require './utils/parser'
 
 class Comment < JSONable
     attr_reader :id, :body, :post_id, :user_id, :created_at, :updated_at, :post, :user, :raw_attachments
+    attr_accessor :attachment
     def initialize(params)
-        @showable_variables = ["id", "body", "created_at", "updated_at", "post", "user"]
+        @showable_variables = ["id", "body", "created_at", "updated_at", "post", "user", "attachment"]
         @id = params["id"]
         @body = params["body"]
         @post_id = params["post_id"]
@@ -32,8 +33,8 @@ class Comment < JSONable
         @user = User.by_id(@user_id)
         raise NotFoundError if @user.nil?
 
-        @post = Post.by_id(@post_id)
-        raise NotFoundError if @post.nil?
+        post = Post.by_id_exists?(@post_id)
+        raise NotFoundError unless post
 
         return true
     end
@@ -46,7 +47,7 @@ class Comment < JSONable
 
         client = MySQLDB.client
         #let controller handle mysql2::error
-        client.query("INSERT INTO comments(post_id, user_id, body) values(#{@user_id}, #{@post_id}, '#{@body}')")
+        client.query("INSERT INTO comments(post_id, user_id, body) values(#{@post_id}, #{@user_id}, '#{@body}')")
 
         @id = client.last_id
 
@@ -62,7 +63,19 @@ class Comment < JSONable
         
         client = MySQLDB.client
         result = client.query("SELECT * FROM comments WHERE post_id = #{post_id}")
-        return bind(result)
+        
+        comments = bind(result)
+        
+        comments.each_index do |index|
+            comments[index].load
+        end
+        
+        return comments  
+    end
+
+    def load
+        @user = User.by_id(@user_id)
+        @attachment = CommentAttachment.by_comment(@id)
     end
 
     def self.bind(collection)
@@ -72,4 +85,6 @@ class Comment < JSONable
         end
         return result
     end
+
+    private_class_method :bind
 end
