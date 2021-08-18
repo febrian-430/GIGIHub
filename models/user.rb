@@ -1,5 +1,6 @@
 require './db/mysql'
 require './utils/JSONable'
+require './exceptions/user_errors'
 
 class User < JSONable
     attr_accessor :username, :email, :bio_description
@@ -17,7 +18,8 @@ class User < JSONable
     def save? 
         return false if @username.nil? || @username.empty?
         return false if @email.nil? || @email.empty?
-        true 
+        
+        return true if self.duplicate? 
     end
 
     def save
@@ -27,6 +29,12 @@ class User < JSONable
         client.query("INSERT INTO users (username, email, bio_description) values('#@username', '#@email', '#@bio_description')")
         @id = client.last_id
         
+        true
+    end
+
+    def duplicate?
+        raise UserErrors::DuplicateEmail if User.by_email(@email)
+        raise UserErrors::DuplicateUsername if User.by_username(@username)
         true
     end
 
@@ -44,23 +52,29 @@ class User < JSONable
         true
     end
 
+    def self.by_email(email)
+        result = MySQLDB.client.query("SELECT * FROM users WHERE email = '#{email}'")
+        users = bind(result)
+        return users[0]
+    end
+
     def self.by_username(username)
         result = MySQLDB.client.query("SELECT * FROM users WHERE username = '#{username}'")
-
-        row = result.each[0]
-        return nil unless row
-
-        user = User.new(row)
-        return user
+        users = bind(result)
+        return users[0]
     end
 
     def self.by_id(id)
         result = MySQLDB.client.query("SELECT * FROM users WHERE id = #{id}")
+        users = bind(result)
+        return users[0]
+    end
 
-        row = result.each[0]
-        return nil unless row
-
-        user = User.new(row)
-        return user
+    def self.bind(raw)
+        result = []
+        raw.each do |data|
+            result << User.new(data)
+        end
+        return result
     end
 end

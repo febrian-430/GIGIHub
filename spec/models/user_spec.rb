@@ -1,6 +1,7 @@
 require 'rspec'
 require_relative '../../models/user'
 require './db/mysql'
+require './exceptions/user_errors'
 
 describe User do
     before(:each) do
@@ -18,7 +19,28 @@ describe User do
 
             context "when username and email is not nil neither empty" do
                 it "should return true" do
+                    allow(@insert_ready_user).to receive(:duplicate?).and_return(true)
                     expect(@insert_ready_user.save?).to eq(true)
+                end
+            end
+
+            context "when "
+        end
+
+        describe "#duplicate?" do
+            context "when email duplicate exists" do
+                it "should raise DuplicateEmail error" do
+                    allow(User).to receive(:by_email).and_return({})
+                    expect { @insert_ready_user.save? }.to raise_error(UserErrors::DuplicateEmail)
+                end
+            end
+
+            context "when username duplicate exists" do
+                it "should raise DuplicateUsername Error" do
+                    allow(User).to receive(:by_email).and_return(nil)
+                    allow(User).to receive(:by_username).and_return({})
+
+                    expect { @insert_ready_user.save? }.to raise_error(UserErrors::DuplicateUsername)
                 end
             end
         end
@@ -110,16 +132,17 @@ describe User do
 
             context "username exists in the database" do
                 it "should return user object" do
-                    mock_result = double
-                    allow(@mock_db).to receive(:query).and_return(mock_result)
-                    allow(mock_result).to receive(:each).and_return([{
+                    array_of_user = [User.new({
                         "id" => "1",
                         "username" => "nobody",
                         "email" => "nobody@nobody.com",
                         "bio_description" => "nobody",
                         "join_date" => "28282822"
-                    }])
+                    })]
+                    mock_result = double
+                    allow(@mock_db).to receive(:query).and_return(mock_result)
 
+                    expect(User).to receive(:bind).with(mock_result).and_return(array_of_user)
                     expect(User.by_username("nobody").username).to eq("nobody")
                 end
             end
@@ -138,16 +161,18 @@ describe User do
 
             context "when id exists in the database" do
                 it "should return user object" do
-                    mock_result = double
-                    allow(@mock_db).to receive(:query).and_return(mock_result)
-                    allow(mock_result).to receive(:each).and_return([{
+                    array_of_user = [User.new({
                         "id" => "1",
                         "username" => "nobody",
                         "email" => "nobody@nobody.com",
                         "bio_description" => "nobody",
                         "join_date" => "28282822"
-                    }])
+                    })]
 
+                    mock_result = double
+                    allow(@mock_db).to receive(:query).and_return(mock_result)
+
+                    expect(User).to receive(:bind).with(mock_result).and_return(array_of_user)
                     expect(User.by_id(1).id).to eq(1)
                 end
             end

@@ -29,12 +29,25 @@ describe CommentAttachment do
 
                 allow(MySQLDB).to receive(:client).and_return(mock_db)
    
-                allow(CommentAttachment).to receive(:store_files).with(files)
+                allow(CommentAttachment).to receive(:store_files).with(files).and_return(files)
                 allow(mock_db).to receive(:affected_rows).and_return(files.length)
                 
                 expect(mock_db).to receive(:query)
                 expect(CommentAttachment.attach_to(comment, files)).to eq(files.length)
             end
+        end
+    end
+
+    describe "#by_comment" do
+        it "returns an attachment of comment" do
+            mock_db = double("database")
+            allow(MySQLDB).to receive(:client).and_return(mock_db)
+            db_result = double("query result")
+            allow(mock_db).to receive(:query).and_return(db_result)
+            attachment = double("attachment")
+            allow(CommentAttachment).to receive(:bind).and_return([attachment])
+
+            expect(CommentAttachment.by_comment(1)).to eq(attachment)
         end
     end
 end

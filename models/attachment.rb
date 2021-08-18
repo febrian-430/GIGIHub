@@ -6,6 +6,7 @@ class Attachment < JSONable
         @id = params["id"]
         @filename = params["filename"]
         @mimetype = params["mimetype"]
+        @filepath = "http://#{ENV["HOST"]}:#{ENV["PORT"]}/static/#@filename" 
     end
 
     def self.attach_to(obj, files = [])
