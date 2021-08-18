@@ -10,7 +10,7 @@ class StorageManager
     #     @bytes
     # }]
     def self.store(files)
-        generated_names = []
+        generated_files = []
         
         files.each do |file|
             #get extension
@@ -23,11 +23,11 @@ class StorageManager
                 f.write(file["file"].read)
             end
 
-            generated_names << {
+            generated_files << {
                 "filename" => filename,
-                "mimetype" => file["type"]
+                "mimetype" => file["mimetype"]
             }
         end
-        generated_names
+        generated_files
     end
 end

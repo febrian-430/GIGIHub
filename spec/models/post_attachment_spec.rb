@@ -33,7 +33,7 @@ describe PostAttachment do
 
                 allow(MySQLDB).to receive(:client).and_return(mock_db)
    
-                allow(PostAttachment).to receive(:store_files).with(files)
+                allow(PostAttachment).to receive(:store_files).with(files).and_return(files)
                 allow(mock_db).to receive(:affected_rows).and_return(files.length)
                 
                 expect(mock_db).to receive(:query)

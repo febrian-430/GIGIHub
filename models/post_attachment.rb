@@ -6,7 +6,6 @@ class PostAttachment < Attachment
 
     def initialize(params)
         super(params)
-        @showable_variables = ["id", "filename", "mimetype"]
         @post_id = params["post_id"]
     end
 
@@ -14,12 +13,12 @@ class PostAttachment < Attachment
         raise(TypeError, "expected Post instance") unless obj.instance_of? Post
         return 0 if files.empty?
 
-        filenames = store_files(files)
+        stored_files = store_files(files)
 
         client = MySQLDB.client
 
         query = "INSERT INTO post_attachments(post_id, filename, mimetype) VALUES"
-        insert_elements = files.map { |file| "(#{obj.id}, '#{file["filename"]}','#{file["mimetype"]}')" }
+        insert_elements = stored_files.map { |file| "(#{obj.id}, '#{file["filename"]}','#{file["mimetype"]}')" }
         query += insert_elements.join(',')
 
         client.query(query)
