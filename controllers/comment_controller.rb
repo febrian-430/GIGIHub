@@ -10,7 +10,7 @@ class CommentController
         if params["attachment"]
             attachment = {
                 "filename" => params["attachment"]["filename"],
-                "mimetype" => params["attachment"]["mimetype"],
+                "mimetype" => params["attachment"]["type"],
                 "file" => params["attachment"]["tempfile"]
             }
         end
