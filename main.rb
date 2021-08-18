@@ -17,6 +17,7 @@ require './models/user'
 Dotenv.load
 
 before '/*' do
+    pass if %w[static].include? request.path_info.split('/')[1]
     content_type :json
     puts params[:splat].inspect
     routes_with_file_uploads = ["posts", "comments", "upload"]
@@ -29,13 +30,12 @@ end
 
 
 get '/static/:filename' do
-    content_type 'image/webp'
     send_file File.expand_path(params["filename"], settings.public_folder)
 end
 
 
 get '/users/:username' do
-    response = UserController.show_by_username(@body)
+    response = UserController.show_by_username(params)
     return [response[:status], json(response[:body])]
 end
 
