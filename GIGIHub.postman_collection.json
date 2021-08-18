@@ -1,0 +1,316 @@
+{
+	"info": {
+		"_postman_id": "5775e00d-2448-4822-9835-bb60f8beb260",
+		"name": "GIGIHub",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"aa@aa\",\r\n    \"username\": \"qwe\",\r\n    \"bio_description\": \"qq\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4567/users",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:4567/users/dummy2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4567/users/qwe",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"users",
+								"qwe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"braaee\",\r\n    \"username\": \"gege\",\r\n    \"bio_description\": \"qqqq\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4567/users/1",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post",
+			"item": [
+				{
+					"name": "Create post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "body",
+									"value": "#anjay mabar",
+									"type": "text"
+								},
+								{
+									"key": "attachments[]",
+									"type": "file",
+									"src": "/D:/.Pictures/hhh/asdasdasdsad.PNG"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/posts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4567/posts/11",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"posts",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all posts ordered by creation date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4567/posts",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get posts with tag",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4567/posts?tag=anjay",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"posts"
+							],
+							"query": [
+								{
+									"key": "tag",
+									"value": "anjay"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tag",
+			"item": [
+				{
+					"name": "get trending tags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/tags/trending",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tags",
+								"trending"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comment",
+			"item": [
+				{
+					"name": "create comment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "post_id",
+									"value": "11",
+									"type": "text"
+								},
+								{
+									"key": "body",
+									"value": "ANJAY #MABAR kinda #cringe",
+									"type": "text"
+								},
+								{
+									"key": "attachment",
+									"type": "file",
+									"src": "/D:/.Pictures/hhh/187-1874337_iggy-jojo-hd-png-download.png"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/comments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get file server",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/static/eea9a81e-8475-47d9-be43-911d7b7d2122.png",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"static",
+						"eea9a81e-8475-47d9-be43-911d7b7d2122.png"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"",
+					"pm.collectionVariables.set(\"base_url\", \"localhost:4567\");"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "localhost:4567"
+		}
+	]
+}
