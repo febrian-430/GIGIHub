@@ -1,3 +1,6 @@
+DROP DATABASE IF EXISTS GIGIHub;
+CREATE DATABASE GIGIHub;
+
 USE GIGIHub;
 
 DROP TABLE IF EXISTS users;
@@ -77,27 +80,16 @@ create table comment_tags (
 insert into users(username, email, bio_description) values
 ('dummy', 'dummy@dummy.com', 'im a dummi1'), ('dummy2', 'dummy2@dummy.com', 'im a dummy two');
 
-insert into posts(user_id, body) values(1, 'generasi #gigih lets goooo #gobeyond'), (2, 'Generasi #gigih 2021'), (1, '#gobeyond');
+insert into posts(user_id, body) values(1, 'generasi #gigih lets goooo #SurpassYourLimit'), (2, 'Generasi #gigih 2021'), (1, '#SurpassYourLimit');
 
-insert into comments(post_id, user_id, body) values(1, 2, 'hello #gigih fellow'), (2, 1, '#gobeyond');
+insert into comments(post_id, user_id, body) values(1, 2, 'hello #gigih fellow'), (2, 1, '#SurpassYourLimit');
 
-insert into tags(name) values('gigih'), ('gobeyond');
+insert into tags(name) values('gigih'), ('SurpassYourLimit');
 
-insert into post_tags(post_id, tag_id) values(1, 1), (1, 2), (2, 2), (3, 2);
+insert into post_tags(post_id, tag_id) values(1, 1), (1, 2), (2, 1), (3, 2);
 
 insert into comment_tags(comment_id, tag_id) values(1, 1), (2, 2);
 
-select id, name, sum(count)
-from (
-    select t.id, t.name, count(pt.post_id) as count
-    from tags t join post_tags pt on t.id = pt.tag_id
-    where pt.created_at >= NOW() - INTERVAL 1 DAY
-    group by t.id
-    union all
-    select t.id, t.name, count(ct.comment_id) as count
-    from tags t join comment_tags ct on t.id = ct.tag_id
-    where ct.created_at >= NOW() - INTERVAL 1 DAY
-    group by t.id
-) tag_counts
-group by id, name
-order by sum(count) desc;
+insert into post_attachments(post_id, filename, mimetype) values (1, 'dummy_post_1.png', 'image/png'), (1, 'dummy_post_2.png', 'image/png');
+
+insert into comment_attachments(comment_id, filename, mimetype) values(1, 'dummy_comment_1.png', 'image/png');
