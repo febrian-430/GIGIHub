@@ -5,7 +5,6 @@ class CommentAttachment < Attachment
     def initialize(params)
         def initialize(params)
             super(params)
-            @showable_variables = ["id", "filename", "mimetype", "filepath"]
             @post_id = params["comment_id"]
         end
     end
