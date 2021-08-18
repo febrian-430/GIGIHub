@@ -1,5 +1,7 @@
 require 'json'
 require './models/user'
+require './exceptions/user_errors'
+
 
 class UserController
     def self.create(params)
@@ -8,20 +10,35 @@ class UserController
             "email" => params["email"],
             "bio_description" => params["bio_description"]
         })
+        begin
+            return {
+                :status => 400,
+                :body => {
+                    :message => "Request body does not meet its criteria",
+                }
+            } unless user.save
 
-        return {
-            :status => 400,
-            :body => {
-                :message => "Request body does not meet its criteria",
-                :ack => false
+        rescue UserErrors::DuplicateEmail => ex
+            return {
+                :status => 400,
+                :body => {
+                    :message => "#{ex.message}"
+                }
             }
-        } unless user.save
+
+        rescue UserErrors::DuplicateUsername => ex
+            return {
+                :status => 400,
+                :body => {
+                    :message => "#{ex.message}"
+                }
+            }
+        end
 
         return {
             :status => 201,
             :body => {
                 :message => "user successfully created",
-                :ack => true,
                 :created_user => user
             }
         }

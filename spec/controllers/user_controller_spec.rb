@@ -1,5 +1,6 @@
 require 'rspec'
 require './controllers/user_controller'
+require './exceptions/user_errors'
 
 describe UserController do
     describe "#create" do
@@ -8,7 +9,7 @@ describe UserController do
             allow(User).to receive(:new).and_return(@user_double)
         end
         context "when failing user model save validation" do
-            it "returns 400, ack false, and error message" do
+            it "returns 400, and error message" do
                 params = {
                     username: "", 
                     email: "", 
@@ -23,7 +24,7 @@ describe UserController do
         end
 
         context "when saving the user succeeded" do
-            it "returns 201, ack true, and success message" do
+            it "returns 201, and success message" do
                 params = {
                     "username": "I can wait forever", 
                     "email": "adada@daw"
@@ -32,6 +33,24 @@ describe UserController do
 
                 response = UserController.create(params)
                 expect(response[:status]).to eq(201)
+            end
+        end
+
+        context "when email in the request already exists" do
+            it "returns 400, and the error message" do
+                allow(@user_double).to receive(:save).and_raise(UserErrors::DuplicateEmail)
+
+                response = UserController.create({})
+                expect(response[:status]).to eq(400)
+            end
+        end
+
+        context "when username in the request already exists" do
+            it "returns 400, and the error message" do
+                allow(@user_double).to receive(:save).and_raise(UserErrors::DuplicateUsername)
+
+                response = UserController.create({})
+                expect(response[:status]).to eq(400)
             end
         end
     end
