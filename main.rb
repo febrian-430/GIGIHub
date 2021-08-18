@@ -19,7 +19,6 @@ Dotenv.load
 before '/*' do
     pass if %w[static].include? request.path_info.split('/')[1]
     content_type :json
-    puts params[:splat].inspect
     routes_with_file_uploads = ["posts", "comments", "upload"]
 
     if !routes_with_file_uploads.include?(params[:splat][0]) && request.body.size > 0
