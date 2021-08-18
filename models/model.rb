@@ -18,4 +18,5 @@ class Model
         end
         return result
     end
+    private_class_method :bind
 end
