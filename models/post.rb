@@ -68,7 +68,8 @@ class Post < JSONable
             FROM posts p
             JOIN (post_tags pt CROSS JOIN tags t)
             ON (p.id = pt.post_id AND t.id = pt.tag_id)
-            WHERE (#{filter["tag"].nil? || filter["tag"].empty? } = true OR t.name = '#{filter["tag"]}')
+            WHERE (#{filter["tag"].nil? || filter["tag"].empty? } = true OR t.name = LOWER('#{filter["tag"]}'))
+            GROUP BY p.id
             ORDER BY p.created_at DESC"
         )
 
