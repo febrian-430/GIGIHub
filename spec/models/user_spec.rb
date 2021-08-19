@@ -44,26 +44,6 @@ describe User do
                 end
             end
         end
-
-        describe "#update?" do
-            context "when user fields are empty" do
-                it "should return false" do
-                    expect(@empty_user.update?).to be_falsey
-                end
-            end
-
-            context "when id is nil" do
-                it "should return false" do
-                    expect(@insert_ready_user.update?).to eq(false)
-                end
-            end
-
-            context "when id, username, email are not nil nor empty" do
-                it "should return true" do
-                    expect(@update_ready_user.update?).to eq(true)
-                end
-            end
-        end
     end
 
     describe "manipulates the database state" do
@@ -90,24 +70,6 @@ describe User do
                     expect(@mock_db).not_to receive(:query)
                     
                     expect(@insert_ready_user.save).to eq(false)
-                end
-            end
-        end
-
-        describe "#update" do
-            context "when user passes validation" do
-                it "should call the database" do
-                    allow(@update_ready_user).to receive(:update?).and_return(true)
-                    expect(@mock_db).to receive(:query)
-                    expect(@update_ready_user.update).to eq(true)
-                end
-            end
-
-            context "when user doesn't pass the validation" do
-                it "should not call the database" do
-                    allow(@update_ready_user).to receive(:update?).and_return(false)
-                    expect(@mock_db).not_to receive(:query)
-                    expect(@update_ready_user.update).to eq(false)
                 end
             end
         end

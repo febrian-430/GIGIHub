@@ -1,6 +1,6 @@
 dependencies.txt
-play.rb
-file_server.rb
+deploy/Vagrantfile
+deploy/.vagrant
 public
 *.gem
 *.rbc

@@ -55,71 +55,7 @@ describe UserController do
         end
     end
 
-    describe "#update" do
-        before(:each) do
-            @user_double = double
-        end
-        context "when id doesnt exist in the database" do
-            it "returns 404" do
-                params = {
-                    "id": "6969",
-                    "username": "I can wait forever", 
-                    "email": "adada@daw",
-                    "bio_description": "nope"
-                }
-                allow(User).to receive(:by_id).and_return(nil)
-                response = UserController.update(params)
-                expect(response[:status]).to eq(404)
-            end
-        end
-
-        context "when id exists but fails validation" do
-            it "returns 400" do
-                params = {
-                    "id": "6969",
-                    "username": "", 
-                    "email": "adada@daw",
-                    "bio_description": "nope"
-                }
-                allow(User).to receive(:by_id).and_return(@user_double)
-                allow(@user_double).to receive(:update?).and_return(false)
-                allow(@user_double).to receive(:username=)
-                allow(@user_double).to receive(:email=)
-                allow(@user_double).to receive(:bio_description=)
-
-                expect(@user_double).to receive(:update)
-                response = UserController.update(params)
-                expect(response[:status]).to eq(400)
-            end
-        end
-
-
-        #test when an error occured during query
-
-
-        context "when id exists and passes validation and no error occured" do
-            it "returns 200 and updated user data" do
-                params = {
-                    "id": "6969",
-                    "username": "", 
-                    "email": "adada@daw",
-                    "bio_description": "nope"
-                }
-                allow(User).to receive(:by_id).and_return(@user_double)
-                allow(@user_double).to receive(:update?).and_return(true)
-                allow(@user_double).to receive(:username=)
-                allow(@user_double).to receive(:email=)
-                allow(@user_double).to receive(:bio_description=)
-                allow(@user_double).to receive(:update).and_return(true)
-
-
-                expect(@user_double).to receive(:update)
-                response = UserController.update(params)
-                expect(response[:status]).to eq(200)
-                expect(response[:body]).not_to eq(nil)
-            end
-        end
-    end
+    
 
     describe "#show_by_username" do
         context "when given username doesnt exist" do
