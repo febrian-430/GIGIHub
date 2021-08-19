@@ -91,7 +91,7 @@ class Tag < Model
         SELECT #{post_id}, id
         FROM tags
         WHERE name IN (#{raw_tags.map { |tag| "LOWER('#{tag}')" }.join(',')})"
-        puts query
+    
 
         client.query(query)
         return client.affected_rows
