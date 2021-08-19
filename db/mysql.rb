@@ -20,20 +20,5 @@ class MySQLDB
         client
     end
 
-    def self.transaction(&block)
-        transaction_client = new_client
-        raise false unless block_given?
-        begin
-            transaction_client.query("START TRANSACTION")
-            yield(transaction_client)
-            transaction_client.query("COMMIT")
-            return true
-        rescue => exception
-            transaction_client.query("ROLLBACK")
-            raise exception
-            return false
-        end
-    end
-
     private_class_method :new_client
 end
