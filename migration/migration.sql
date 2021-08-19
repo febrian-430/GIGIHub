@@ -1,3 +1,4 @@
+-- change 'GIGIHub' into your desired database name
 DROP DATABASE IF EXISTS GIGIHub;
 CREATE DATABASE GIGIHub;
 
