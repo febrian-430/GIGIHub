@@ -58,7 +58,7 @@ describe PostAttachment do
                 allow(MySQLDB).to receive(:client).and_return(mock_db)
                 allow(mock_db).to receive(:query).and_return(result_dbl)
 
-                expect(PostAttachment).to receive(:bind).with(result_dbl)
+                expect(PostAttachment).to receive(:bind).with(PostAttachment, result_dbl)
                 PostAttachment.by_post(1)
             end
         end

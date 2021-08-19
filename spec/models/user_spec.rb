@@ -142,7 +142,7 @@ describe User do
                     mock_result = double
                     allow(@mock_db).to receive(:query).and_return(mock_result)
 
-                    expect(User).to receive(:bind).with(mock_result).and_return(array_of_user)
+                    expect(User).to receive(:bind).with(User, mock_result).and_return(array_of_user)
                     expect(User.by_username("nobody").username).to eq("nobody")
                 end
             end
@@ -172,7 +172,7 @@ describe User do
                     mock_result = double
                     allow(@mock_db).to receive(:query).and_return(mock_result)
 
-                    expect(User).to receive(:bind).with(mock_result).and_return(array_of_user)
+                    expect(User).to receive(:bind).with(User, mock_result).and_return(array_of_user)
                     expect(User.by_id(1).id).to eq(1)
                 end
             end
