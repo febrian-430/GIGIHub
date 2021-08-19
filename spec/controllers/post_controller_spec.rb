@@ -1,5 +1,6 @@
 require 'rspec'
 require './controllers/post_controller'
+require './db/mysql'
 
 describe PostController do
     describe "#create" do
@@ -10,7 +11,10 @@ describe PostController do
             }
 
             @post_dbl = double("Post")
-            
+            @mock_db = double("database")
+
+            allow(MySQLDB).to receive(:client)
+            allow(@mock_db).to receive(:query)
         end
         context "when user id doesnt exist" do
             it 'returns 404 and not save' do
@@ -35,6 +39,27 @@ describe PostController do
                     "body" => body
                 })
                 expect(response[:status]).to eq(400)
+            end
+        end
+
+        context "when request has attachments" do
+            it "calls array map method and returns 201" do
+                @complete_params["attachments"] = [{
+                    "filename" => "abc",
+                    "mimetype" => "asd",
+                    "file" => "def"
+                }]
+
+                user_dbl = double
+                post_dbl = double
+                allow(Post).to receive(:new).and_return(post_dbl)
+                allow(User).to receive(:by_id).and_return(user_dbl)
+                allow(post_dbl).to receive(:user_id)
+                allow(post_dbl).to receive(:save).and_return(true)
+
+                response = PostController.create(@complete_params)
+                
+                expect(response[:status]).to eq(201)
             end
         end
 
@@ -63,7 +88,7 @@ describe PostController do
             end
         end
 
-        context "when id doesnt exist" do
+        context "when id exists" do
             it "returns 200" do
                 post_dbl = double("post")
                 allow(Post).to receive(:by_id).and_return post_dbl
