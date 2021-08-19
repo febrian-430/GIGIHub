@@ -6,7 +6,7 @@ class Attachment < Model
         @id = params["id"]
         @filename = params["filename"]
         @mimetype = params["mimetype"]
-        @filepath = "http://#{ENV["HOST"]}:#{ENV["PORT"]}/static/#@filename" 
+        @filepath = "http://#{ENV["APP_HOST"]}:#{ENV["PORT"]}/static/#@filename" 
         @showable_variables = ["id", "filename", "mimetype", "filepath"]
 
     end
