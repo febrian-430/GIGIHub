@@ -139,5 +139,44 @@ describe User do
                 end
             end
         end
+
+        describe "#by_email" do
+            context "when user with email doesn't exist in the database" do
+                it "should return nil" do
+                    mock_result = double
+                    allow(@mock_db).to receive(:query).and_return(mock_result)
+                    allow(mock_result).to receive(:each).and_return([])
+
+                    expect(User.by_email("avcdef")).to eq(nil)
+                end
+            end
+
+            context "when email exists in the database" do
+                it "should return user object" do
+                    array_of_user = [{
+                        "id" => "1",
+                        "username" => "nobody",
+                        "email" => "nobody@nobody.com",
+                        "bio_description" => "nobody",
+                        "join_date" => "28282822"
+                    }]
+
+                    result = [User.new({
+                        "id" => "1",
+                        "username" => "nobody",
+                        "email" => "nobody@nobody.com",
+                        "bio_description" => "nobody",
+                        "join_date" => "28282822"
+                    })]
+
+                    mock_result = double("Result")
+                    allow(@mock_db).to receive(:query).and_return(mock_result)
+                    allow(mock_result).to receive(:each).and_return(array_of_user)
+
+                    allow(User).to receive(:bind).with(User, mock_result).and_return result
+                    expect(User.by_email("i dont know anymore").email).to eq(array_of_user[0]["email"])
+                end
+            end
+        end
     end
 end
