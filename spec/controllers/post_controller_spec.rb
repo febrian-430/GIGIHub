@@ -24,6 +24,20 @@ describe PostController do
             end
         end
 
+        context "when body is more than 1000 characters" do
+            it 'returns 400' do
+                body = ""
+                1001.times do 
+                    body += "a" 
+                end
+                response = PostController.create({
+                    "user_id" => @complete_params["user_id"],
+                    "body" => body
+                })
+                expect(response[:status]).to eq(400)
+            end
+        end
+
         context "when an error happened during post#save" do
             it 'returns 500' do
                 user_dbl = double("User")

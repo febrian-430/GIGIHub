@@ -18,6 +18,15 @@ class PostController
             } 
         end
 
+        if params["body"] && (params["body"].length > 1000)
+            return {
+                :status => 400,
+                :body => {
+                    :msg => "body has more than 1000 characters"
+                }
+            }
+        end
+
         post = Post.new({
             "user_id" => params["user_id"].to_i,
             "body" => params["body"],
