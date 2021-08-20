@@ -76,6 +76,10 @@ class Post < Model
         raw = result.each
         posts = bind(Post ,raw)
 
+        posts.each_index do |index|
+            posts[index].user = User.by_id(posts[index].user_id)
+        end
+
         return posts
     end
 
