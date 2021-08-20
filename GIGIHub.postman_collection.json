@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5775e00d-2448-4822-9835-bb60f8beb260",
+		"_postman_id": "8588796a-2970-4707-ae57-3b2a128745da",
 		"name": "GIGIHub",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"aa@aa\",\r\n    \"username\": \"qwe\",\r\n    \"bio_description\": \"qq\"\r\n}",
+							"raw": "{\r\n    \"email\": \"12@anjay\",\r\n    \"username\": \"aaa\",\r\n    \"bio_description\": \"qq\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -23,11 +23,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:4567/users",
+							"raw": "{{prod}}/users",
 							"host": [
-								"localhost"
+								"{{prod}}"
 							],
-							"port": "4567",
 							"path": [
 								"users"
 							]
@@ -41,42 +40,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4567/users/qwe",
+							"raw": "{{prod}}/users/aaa",
 							"host": [
-								"localhost"
+								"{{prod}}"
 							],
-							"port": "4567",
 							"path": [
 								"users",
-								"qwe"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"braaee\",\r\n    \"username\": \"gege\",\r\n    \"bio_description\": \"qqqq\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:4567/users/1",
-							"host": [
-								"localhost"
-							],
-							"port": "4567",
-							"path": [
-								"users",
-								"1"
+								"aaa"
 							]
 						}
 					},
@@ -97,7 +67,7 @@
 							"formdata": [
 								{
 									"key": "user_id",
-									"value": "5",
+									"value": "4",
 									"type": "text"
 								},
 								{
@@ -110,17 +80,12 @@
 									"type": "file",
 									"src": "/D:/.Pictures/hhh/asdasdasdsad.PNG"
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
-							"raw": "{{base_url}}/posts",
+							"raw": "{{prod}}/posts",
 							"host": [
-								"{{base_url}}"
+								"{{prod}}"
 							],
 							"path": [
 								"posts"
@@ -135,14 +100,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4567/posts/11",
+							"raw": "{{prod}}/posts/1",
 							"host": [
-								"localhost"
+								"{{prod}}"
 							],
-							"port": "4567",
 							"path": [
 								"posts",
-								"11"
+								"1"
 							]
 						}
 					},
@@ -154,11 +118,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4567/posts",
+							"raw": "{{prod}}/posts",
 							"host": [
-								"localhost"
+								"{{prod}}"
 							],
-							"port": "4567",
 							"path": [
 								"posts"
 							]
@@ -172,11 +135,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4567/posts?tag=anjay",
+							"raw": "{{prod}}/posts?tag=anjay",
 							"host": [
-								"localhost"
+								"{{prod}}"
 							],
-							"port": "4567",
 							"path": [
 								"posts"
 							],
@@ -201,9 +163,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/tags/trending",
+							"raw": "{{prod}}/tags/trending",
 							"host": [
-								"{{base_url}}"
+								"{{prod}}"
 							],
 							"path": [
 								"tags",
@@ -233,30 +195,25 @@
 								},
 								{
 									"key": "post_id",
-									"value": "11",
+									"value": "1",
 									"type": "text"
 								},
 								{
 									"key": "body",
-									"value": "ANJAY #MABAR kinda #cringe",
+									"value": "#sheesh",
 									"type": "text"
 								},
 								{
 									"key": "attachment",
 									"type": "file",
-									"src": "/D:/.Pictures/hhh/187-1874337_iggy-jojo-hd-png-download.png"
+									"src": []
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
-							"raw": "{{base_url}}/comments",
+							"raw": "{{prod}}/comments",
 							"host": [
-								"{{base_url}}"
+								"{{prod}}"
 							],
 							"path": [
 								"comments"
@@ -273,13 +230,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/static/eea9a81e-8475-47d9-be43-911d7b7d2122.png",
+					"raw": "{{base_url}}/static/59897dd5-8a82-4933-ad2b-d7313a742075.txt",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"static",
-						"eea9a81e-8475-47d9-be43-911d7b7d2122.png"
+						"59897dd5-8a82-4933-ad2b-d7313a742075.txt"
 					]
 				}
 			},
@@ -308,6 +265,14 @@
 		}
 	],
 	"variable": [
+		{
+			"key": "dev",
+			"value": "localhost:4567"
+		},
+		{
+			"key": "prod",
+			"value": "34.80.119.157:4567"
+		},
 		{
 			"key": "base_url",
 			"value": "localhost:4567"
