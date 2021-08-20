@@ -16,6 +16,10 @@ require './models/user'
 
 Dotenv.load
 
+if ENV["MODE"] == "PROD"
+    set :bind, 0.0.0.0
+end
+
 before '/*' do
     pass if %w[static].include? request.path_info.split('/')[1]
     content_type :json
