@@ -9,6 +9,7 @@ class Attachment < Model
         host = ENV["HOST"]
         if ENV["MODE"] == "PROD"
             host = ENV["PROD_APP_HOST"]
+        end
         @filepath = "http://#{host}:#{ENV["PORT"]}/static/#@filename" 
         @showable_variables = ["id", "filename", "mimetype", "filepath"]
 
