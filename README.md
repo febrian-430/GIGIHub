@@ -18,7 +18,7 @@ To run this application on your local machine, first thing first you can `clone`
 	git clone https://github.com/febrian-430/GIGIHub.git
 
 and install the following
-- `Ruby` 
+- `Ruby ver 3.0.2` 
 	- <a href="https://github.com/rbenv/rbenv"> rbenv</a> (preferred)
 	- <a href="https://www.ruby-lang.org/en/downloads/"> Official Ruby download page</a>
 - <a href="https://dev.mysql.com/downloads/installer/"> `MySQL Server`</a>
