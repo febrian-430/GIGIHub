@@ -161,20 +161,12 @@ describe User do
                         "join_date" => "28282822"
                     }]
 
-                    result = [User.new({
-                        "id" => "1",
-                        "username" => "nobody",
-                        "email" => "nobody@nobody.com",
-                        "bio_description" => "nobody",
-                        "join_date" => "28282822"
-                    })]
-
                     mock_result = double("Result")
                     allow(@mock_db).to receive(:query).and_return(mock_result)
-                    allow(mock_result).to receive(:each).and_return(array_of_user)
+                    allow(mock_result).to receive(:each).and_yield(array_of_user[0])
 
-                    allow(User).to receive(:bind).with(User, mock_result).and_return result
-                    expect(User.by_email("i dont know anymore").email).to eq(array_of_user[0]["email"])
+                    # expect(User).to receive(:bind).with(User, mock_result)
+                    expect(User.by_email("nobody@nobody.com").email).to eq(array_of_user[0]["email"])
                 end
             end
         end
