@@ -5,7 +5,7 @@ class CommentAttachment < Attachment
     def initialize(params)
         def initialize(params)
             super(params)
-            @post_id = params["comment_id"]
+            @comment_id = params["comment_id"].to_i
         end
     end
 

@@ -1,5 +1,4 @@
 require './models/attachment'
-require './exceptions/type_mismatch'
 require './db/mysql'
 
 class PostAttachment < Attachment

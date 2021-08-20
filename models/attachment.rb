@@ -3,7 +3,7 @@ require './utils/storage_manager'
 
 class Attachment < Model
     def initialize(params)
-        @id = params["id"]
+        @id = params["id"].to_i
         @filename = params["filename"]
         @mimetype = params["mimetype"]
         host = ENV["HOST"]

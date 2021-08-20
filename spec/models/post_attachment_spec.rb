@@ -4,7 +4,6 @@ require './models/post_attachment'
 require './models/post'
 require './utils/storage_manager'
 require './db/mysql'
-require './exceptions/type_mismatch'
 require './exceptions/not_found'
 
 

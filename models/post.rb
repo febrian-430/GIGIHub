@@ -14,7 +14,7 @@ class Post < Model
     
     def initialize(params)
         @showable_variables = ["id", "body", "created_at", "updated_at", "user", "tags", "attachments", "comments"]
-        @id = params["id"]
+        @id = params["id"].to_i
         @body = params["body"]
         @created_at = params["created_at"]
         @updated_at = params["updated_at"]
@@ -27,9 +27,6 @@ class Post < Model
         
         @raw_attachments = params["attachments"].to_a
         @attachments = []
-        # if params[:user_id] 
-        #     @user = User.by_id(params[:user_id].to_i)
-        # end
     end
 
     def save?
