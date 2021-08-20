@@ -88,34 +88,60 @@ describe Comment do
             end
         end
     end
-
-    describe "#by_post" do
-        context "given post id doesnt exist" do
-            it "raises NotFoundError" do
-                allow(Post).to receive(:by_id_exists?).and_return(false)
-
-                expect{Comment.by_post(-1)}.to raise_error(NotFoundError)
-            end
-        end
-
-        context "given post id exists" do
-            it "returns the comments" do
-                allow(Post).to receive(:by_id_exists?).and_return(true)
-                mock_db = double
-                allow(MySQLDB).to receive(:client).and_return(mock_db)
-                allow(Comment).to receive(:bind).and_return([])
-                
-                expect(mock_db).to receive(:query)
-                comments = Comment.by_post(1)
-                expect(comments.instance_of? Array).to eq(true)
-            end
-        end
-    end
-
-    describe "manipulates database by" do
+    describe "access database" do
         before(:each) do
             @mock_db = double("Database")
+            allow(MySQLDB).to receive(:client).and_return(@mock_db)
         end
+        describe "#by_post" do
+            context "given post id doesnt exist" do
+                it "raises NotFoundError" do
+                    allow(Post).to receive(:by_id_exists?).and_return(false)
+
+                    expect{Comment.by_post(-1)}.to raise_error(NotFoundError)
+                end
+            end
+
+            context "given post id exists" do
+                it "returns the comments" do
+                    allow(Post).to receive(:by_id_exists?).and_return(true)
+                    allow(Comment).to receive(:bind).and_return([])
+                    
+                    expect(@mock_db).to receive(:query)
+                    comments = Comment.by_post(1)
+                    expect(comments.instance_of? Array).to eq(true)
+                end
+            end
+        end
+
+        describe "#by_id" do
+            context "given id doesnt exist" do
+                it "return nil" do
+                    result = []
+                    allow(@mock_db).to receive(:query).and_return(result)
+                    allow(result).to receive(:each)
+
+                    expect(Comment.by_id(-1)).to eq(nil)
+                end
+            end
+
+            context "given id exists" do
+                it "returns the comment" do
+                    result = [{
+                        "id" => "1",
+                        "body"=> "abc #def",
+                        "post_id" => "2",
+                        "user_id" => 1
+                    }]
+                    allow(@mock_db).to receive(:query).and_return(result)
+                    allow(result).to receive(:each).and_yield(result[0])
+                    comment = Comment.by_id(1)
+                    expect(comment.id).to eq(1)
+                end
+            end
+        end
+
+    
         describe "#save" do
             context "when doesnt pass validation" do
                 it "returns false" do
