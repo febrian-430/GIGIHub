@@ -133,82 +133,85 @@ describe Tag do
         #         end
         #     end
         # end
-
-        describe "#insert_post_tags" do
-            context "when post id doesnt exist" do
-                it "should return false" do
-                    allow(Post).to receive(:by_id).and_return(nil)
-
-                    expect { Tag.insert_post_tags(-1, []) }.to raise_error(NotFoundError)
-                end
-            end
-
-            context "when post id exists and empty array for tags" do
-                it "should return true but not call link method" do
-                    post_dbl = double("post")
-                    allow(Post).to receive(:by_id).and_return(post_dbl)
-                    
-                    expect(Tag.insert_post_tags(1, [])).to eq(true)
-                    expect(Tag).not_to receive(:link_tags_to_post!)
-                end
-            end
-
-            context "when post id exists and empty array for tags" do
-                it "should return true and call link method" do
-                    post_id = 1
-                    tags = ["gigih"]
-                    post_dbl = double("post")
-                    mock_db = double("database")
-                    allow(MySQLDB).to receive(:client).and_return(mock_db)
-                    allow(mock_db).to receive(:query)
-                    allow(mock_db).to receive(:affected_rows).and_return(1)
-                    allow(Post).to receive(:by_id).and_return(post_dbl)
-                    allow(post_dbl).to receive(:id).and_return(post_id)
-                    # allow(Tag).to receive(:link_tags_to_post!).and_return(0)
-
-                    # expect(Tag).to receive(:link_tags_to_post!).with(post_id, tags)
-                    # expect(Tag).to receive(:bulk_insert!).with(tags)
-                    expect(Tag.insert_post_tags(post_id, tags)).to eq(true)
-                end
-            end
-        end  
-
-        describe "#insert_comment_tags" do
+        describe "access database" do
             before(:each) do
-                @mock_db = double("db")
+                @mock_db = double("mock db")
                 allow(MySQLDB).to receive(:client).and_return(@mock_db)
             end
+            describe "#insert_post_tags" do
+                context "when post id doesnt exist" do
+                    it "should return false" do
+                        allow(Post).to receive(:by_id).and_return(nil)
 
-            context "when empty array of tags" do
-                it "returns 0" do
-                    # allow(Tag).to receive(:bulk_insert!)
+                        expect { Tag.insert_post_tags(-1, []) }.to raise_error(NotFoundError)
+                    end
+                end
 
-                    # expect(Tag).not_to receive(:bulk_insert!)
-                    expect(@mock_db).not_to receive(:query)
-                    expect(Tag.insert_comment_tags(-1, [])).to eq(0)
+                context "when post id exists and empty array for tags" do
+                    it "should return true but not call link method" do
+                        post_dbl = double("post")
+                        allow(Post).to receive(:by_id).and_return(post_dbl)
+                        
+                        expect(Tag.insert_post_tags(1, [])).to eq(true)
+                        expect(Tag).not_to receive(:link_tags_to_post)
+                    end
+                end
+
+                context "when post id exists and empty array for tags" do
+                    it "should return true and call link method" do
+                        post_id = 1
+                        tags = ["gigih"]
+                        post_dbl = double("post")
+                        
+                        allow(@mock_db).to receive(:query)
+                        allow(@mock_db).to receive(:affected_rows).and_return(1)
+                        allow(Post).to receive(:by_id).and_return(post_dbl)
+                        allow(post_dbl).to receive(:id).and_return(post_id)
+
+                        expect(Tag.insert_post_tags(post_id, tags)).to eq(true)
+                    end
+                end
+            end  
+
+            describe "#insert_comment_tags" do
+                context "when comment id is not found" do
+                    it "raises NotFoundError" do
+                        result = []
+                        allow(Comment).to receive(:by_id).and_return(nil)
+        
+                        expect{Tag.insert_comment_tags(-1, [])}.to raise_error(NotFoundError)
+                    end
+                end
+
+                context "when comment id  exists and empty array for tags" do
+                    it "should return true but not call link method" do
+                        comment_dbl = double("comment")
+                        allow(Comment).to receive(:by_id).and_return(comment_dbl)
+                        allow(@mock_db).to receive(:query)
+
+                        expect(Tag.insert_comment_tags(1, [])).to eq(true)
+                        expect(Tag).not_to receive(:link_tags_to_comment)
+                    end
+                end
+
+                context "when non empty array for tags" do
+                    it "should return true and call link method" do
+                        comment_id = 1
+                        tags = ["gigih"]
+
+                        comment_dbl = double("comment")
+                        allow(Comment).to receive(:by_id).and_return(comment_dbl)
+
+                        allow(@mock_db).to receive(:query)
+                        allow(@mock_db).to receive(:affected_rows).and_return(1)
+
+
+                        expect(Tag.insert_comment_tags(comment_id, tags)).to eq(true)
+                    end
                 end
             end
 
-            context "when non empty array for tags" do
-                it "should return true and call link method" do
-                    comment_id = 1
-                    tags = ["gigih"]
-
-                    # allow(Tag).to receive(:bulk_insert!)
-                    allow(@mock_db).to receive(:query)
-                    allow(@mock_db).to receive(:affected_rows).and_return(1)
-
-
-                    expect(Tag.insert_comment_tags(comment_id, tags)).to eq(true)
-                end
-            end
-        end
-
-    describe "fetch" do
-        before(:each) do
-            @mock_db = double("mock db")
-            allow(MySQLDB).to receive(:client).and_return(@mock_db)
-        end
+    
 
         describe "#by_post" do
             context "when post_id doesnt exist" do

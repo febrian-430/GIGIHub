@@ -6,7 +6,7 @@ require './models/model'
 class Tag < Model
     def initialize(params)
         @showable_variables = ["id", "name", "count"]
-        @id = params["id"]
+        @id = params["id"].to_i
         @name = params["name"]
         @created_at = params["created_at"]
         @count = params["count"]
@@ -43,19 +43,13 @@ class Tag < Model
         tags
     end
 
-    def self.insert_comment_tags(comment_id, raw_tags)
-        return 0 if raw_tags.empty?
+    def self.insert_comment_tags(comment_id, raw_tags = [])
+        comment = Comment.by_id(comment_id.to_i)
 
-        bulk_insert!(raw_tags)
+        raise NotFoundError unless comment
 
-        client = MySQLDB.client
-        query = "INSERT IGNORE INTO comment_tags(comment_id, tag_id)
-        SELECT #{comment_id}, id
-        FROM tags
-        WHERE name IN (#{raw_tags.map { |tag| "LOWER('#{tag}')" }.join(',')})"
-
-        client.query(query)
-        return true
+        link_tags_to_comment(comment_id, raw_tags) unless raw_tags.empty?
+        true
     end
 
     def self.insert_post_tags(post_id, raw_tags = [])
@@ -63,7 +57,7 @@ class Tag < Model
 
         raise NotFoundError unless post
 
-        link_tags_to_post!(post.id, raw_tags) unless raw_tags.empty?
+        link_tags_to_post(post_id, raw_tags) unless raw_tags.empty?
         true
     end
 
@@ -81,10 +75,10 @@ class Tag < Model
 
 
     #private 
-    def self.link_tags_to_post!(post_id, raw_tags=[])
+    def self.link_tags_to_post(post_id, raw_tags=[])
         return 0 if raw_tags.empty?
 
-        bulk_insert!(raw_tags)
+        bulk_insert(raw_tags)
 
         client = MySQLDB.client
         query = "INSERT IGNORE INTO post_tags(post_id, tag_id)
@@ -97,8 +91,23 @@ class Tag < Model
         return client.affected_rows
     end
 
+    def self.link_tags_to_comment(comment_id, raw_tags=[])
+        return 0 if raw_tags.empty?
+
+        bulk_insert(raw_tags)
+
+        client = MySQLDB.client
+        query = "INSERT IGNORE INTO comment_tags(comment_id, tag_id)
+        SELECT #{comment_id}, id
+        FROM tags
+        WHERE name IN (#{raw_tags.map { |tag| "LOWER('#{tag}')" }.join(',')})"
+
+        client.query(query)
+        return client.affected_rows
+    end
+
     #private
-    def self.bulk_insert!(raw_tags = [])
+    def self.bulk_insert(raw_tags = [])
         return 0 if raw_tags.empty?
 
         client = MySQLDB.client
@@ -115,5 +124,5 @@ class Tag < Model
         return client.affected_rows
     end
 
-    private_class_method :bulk_insert!, :link_tags_to_post!
+    private_class_method :bulk_insert, :link_tags_to_post, :link_tags_to_comment
 end
