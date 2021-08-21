@@ -14,7 +14,7 @@ class UserController
             return {
                 :status => 400,
                 :body => {
-                    :message => "Request body does not meet its criteria",
+                    :message => "Username and email are required",
                 }
             } unless user.save
 
