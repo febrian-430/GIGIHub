@@ -14,6 +14,16 @@ class CommentController
                 "file" => params["attachment"]["tempfile"]
             }
         end
+
+        if params["body"] && (params["body"].length > 1000)
+            return {
+                :status => 400,
+                :body => {
+                    :msg => "body has more than 1000 characters"
+                }
+            }
+        end
+
         comment = Comment.new({
             "body" => params["body"],
             "user_id" => params["user_id"].to_i,

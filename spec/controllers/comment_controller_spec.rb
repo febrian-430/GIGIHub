@@ -30,6 +30,21 @@ describe CommentController do
             end
         end
 
+        context "when body is more than 1000 characters" do
+            it 'returns 400' do
+                body = ""
+                1001.times do 
+                    body += "a" 
+                end
+                response = CommentController.create({
+                    "user_id" => 1,
+                    "post_id" => 2,
+                    "body" => body
+                })
+                expect(response[:status]).to eq(400)
+            end
+        end
+
         context "when comment#save returns false" do
             it "returns 400" do
                 comment = double("Comment")
