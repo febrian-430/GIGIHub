@@ -86,7 +86,7 @@ class Tag < Model
         query = "INSERT IGNORE INTO post_tags(post_id, tag_id)
         SELECT #{post_id}, id
         FROM tags
-        WHERE name IN (#{tag_elements})"
+        WHERE name IN (#{tag_elements.join(',')})"
     
 
         client.query(query)
@@ -103,7 +103,7 @@ class Tag < Model
         query = "INSERT IGNORE INTO comment_tags(comment_id, tag_id)
         SELECT #{comment_id}, id
         FROM tags
-        WHERE name IN (#{tag_elements})"
+        WHERE name IN (#{tag_elements.join(',')})"
 
         client.query(query)
         return client.affected_rows
