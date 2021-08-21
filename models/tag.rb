@@ -66,7 +66,8 @@ class Tag < Model
         raise NotFoundError unless post
 
         client = MySQLDB.client
-        query_result = client.query("SELECT t.* FROM tags t JOIN post_tags pt ON t.id = pt.tag_id 
+        query_result = client.query("SELECT t.* 
+            FROM tags t JOIN post_tags pt ON t.id = pt.tag_id 
             WHERE post_id = #{post_id}")
 
         tags = bind(Tag, query_result)
@@ -81,10 +82,11 @@ class Tag < Model
         bulk_insert(raw_tags)
 
         client = MySQLDB.client
+        tag_elements = map_tags_for_query(raw_tags)
         query = "INSERT IGNORE INTO post_tags(post_id, tag_id)
         SELECT #{post_id}, id
         FROM tags
-        WHERE name IN (#{raw_tags.map { |tag| "LOWER('#{tag}')" }.join(',')})"
+        WHERE name IN (#{tag_elements})"
     
 
         client.query(query)
@@ -97,10 +99,11 @@ class Tag < Model
         bulk_insert(raw_tags)
 
         client = MySQLDB.client
+        tag_elements = map_tags_for_query(raw_tags)
         query = "INSERT IGNORE INTO comment_tags(comment_id, tag_id)
         SELECT #{comment_id}, id
         FROM tags
-        WHERE name IN (#{raw_tags.map { |tag| "LOWER('#{tag}')" }.join(',')})"
+        WHERE name IN (#{tag_elements})"
 
         client.query(query)
         return client.affected_rows
@@ -112,17 +115,28 @@ class Tag < Model
 
         client = MySQLDB.client
 
-        statement = "INSERT IGNORE INTO tags(name) VALUES"
-        inserted_ids = []
-        query_elements = raw_tags.map {
-            |tag|
-            "(LOWER('%s'))" % tag
-        }
-        statement += query_elements.join(',')
+        query = build_bulk_insert_query(raw_tags)
         
-        client.query(statement)
+        client.query(query)
         return client.affected_rows
     end
 
-    private_class_method :bulk_insert, :link_tags_to_post, :link_tags_to_comment
+    def self.build_bulk_insert_query(raw_tags)
+        statement = "INSERT IGNORE INTO tags(name) VALUES"
+        query_elements = map_tags_for_query(raw_tags)
+        statement += query_elements.join(',')
+        return statement
+    end
+
+    def self.map_tags_for_query(raw_tags)
+        return raw_tags.map {
+            |tag|
+            "(LOWER('%s'))" % tag
+        }
+    end
+
+    private_class_method :bulk_insert, :link_tags_to_post, 
+        :link_tags_to_comment, 
+        :map_tags_for_query, 
+        :build_bulk_insert_query
 end
