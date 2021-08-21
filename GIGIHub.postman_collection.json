@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8588796a-2970-4707-ae57-3b2a128745da",
+		"_postman_id": "a7d09fbe-92bc-4456-97bb-d1fb4f6bf159",
 		"name": "GIGIHub",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"12@anjay\",\r\n    \"username\": \"aaa\",\r\n    \"bio_description\": \"qq\"\r\n}",
+							"raw": "{\r\n    \"email\": \"12@gigih\",\r\n    \"username\": \"asd\",\r\n    \"bio_description\": \"qq\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -40,13 +40,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{prod}}/users/aaa",
+							"raw": "{{prod}}/users/asd",
 							"host": [
 								"{{prod}}"
 							],
 							"path": [
 								"users",
-								"aaa"
+								"asd"
 							]
 						}
 					},
@@ -72,13 +72,13 @@
 								},
 								{
 									"key": "body",
-									"value": "#anjay mabar",
+									"value": "#surpassyourlimit abcdef #gigih",
 									"type": "text"
 								},
 								{
 									"key": "attachments[]",
 									"type": "file",
-									"src": "/D:/.Pictures/hhh/asdasdasdsad.PNG"
+									"src": []
 								}
 							]
 						},
@@ -135,7 +135,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{prod}}/posts?tag=anjay",
+							"raw": "{{prod}}/posts?tag=surpassyourlimit",
 							"host": [
 								"{{prod}}"
 							],
@@ -145,7 +145,7 @@
 							"query": [
 								{
 									"key": "tag",
-									"value": "anjay"
+									"value": "surpassyourlimit"
 								}
 							]
 						}
