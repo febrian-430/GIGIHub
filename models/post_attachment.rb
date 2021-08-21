@@ -14,12 +14,9 @@ class PostAttachment < Attachment
 
         stored_files = store_files(files)
 
+        query = build_insert_query(obj, stored_files)
+
         client = MySQLDB.client
-
-        query = "INSERT INTO post_attachments(post_id, filename, mimetype) VALUES"
-        insert_elements = stored_files.map { |file| "(#{obj.id}, '#{file["filename"]}','#{file["mimetype"]}')" }
-        query += insert_elements.join(',')
-
         client.query(query)
 
         return client.affected_rows
@@ -37,4 +34,11 @@ class PostAttachment < Attachment
         return attachments
     end
 
+    def self.build_insert_query(obj, files)
+        query = "INSERT INTO post_attachments(post_id, filename, mimetype) VALUES"
+        insert_elements = files.map { |file| "(#{obj.id}, '#{file["filename"]}','#{file["mimetype"]}')" }
+        query += insert_elements.join(',')
+        
+        return query
+    end
 end

@@ -22,4 +22,10 @@ class Attachment < Model
     def self.store_files(files = [])
         StorageManager.store(files)
     end
+
+    def self.build_insert_query(obj, files)
+        raise NotImplementedError
+    end
+
+    private_class_method :build_insert_query
 end

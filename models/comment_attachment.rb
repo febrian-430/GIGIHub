@@ -32,12 +32,10 @@ class CommentAttachment < Attachment
         return attachments[0]
     end
 
-    def self.build_insert_query(comment, files)
+    def self.build_insert_query(obj, files)
         query = "INSERT INTO comment_attachments(comment_id, filename, mimetype) VALUES"
-        insert_elements = files.map { |file| "(#{comment.id}, '#{file["filename"]}','#{file["mimetype"]}')" }
+        insert_elements = files.map { |file| "(#{obj.id}, '#{file["filename"]}','#{file["mimetype"]}')" }
         query += insert_elements.join(',')
         return query
     end
-
-    private_class_method :build_insert_query
 end
