@@ -35,7 +35,7 @@
 					"response": []
 				},
 				{
-					"name": "localhost:4567/users/dummy2",
+					"name": "get user",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -200,7 +200,7 @@
 								},
 								{
 									"key": "body",
-									"value": "#sheesh",
+									"value": "#gigih abcdef #abcd",
 									"type": "text"
 								},
 								{
@@ -230,9 +230,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/static/59897dd5-8a82-4933-ad2b-d7313a742075.txt",
+					"raw": "{{prod}}/static/59897dd5-8a82-4933-ad2b-d7313a742075.txt",
 					"host": [
-						"{{base_url}}"
+						"{{prod}}"
 					],
 					"path": [
 						"static",
