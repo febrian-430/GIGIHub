@@ -17,9 +17,7 @@ class CommentAttachment < Attachment
         
         stored_files = store_files(files)
 
-        query = "INSERT INTO comment_attachments(comment_id, filename, mimetype) VALUES"
-        insert_elements = stored_files.map { |file| "(#{obj.id}, '#{file["filename"]}','#{file["mimetype"]}')" }
-        query += insert_elements.join(',')
+        query = build_insert_query(obj, stored_files)
         client.query(query)
 
         return client.affected_rows
@@ -34,5 +32,12 @@ class CommentAttachment < Attachment
         return attachments[0]
     end
 
-    private_class_method :bind
+    def self.build_insert_query(comment, files)
+        query = "INSERT INTO comment_attachments(comment_id, filename, mimetype) VALUES"
+        insert_elements = files.map { |file| "(#{comment.id}, '#{file["filename"]}','#{file["mimetype"]}')" }
+        query += insert_elements.join(',')
+        return query
+    end
+
+    private_class_method :build_insert_query
 end
